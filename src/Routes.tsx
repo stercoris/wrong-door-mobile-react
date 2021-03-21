@@ -1,11 +1,11 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { ChatView } from "./Chat/Chat";
+import { ChatView } from "./Navigation/Chat/Chat";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import { LogsView } from "./Logs/Logs";
-import { ButtonsView } from "./Buttons/Buttons";
-import { RoomsRouter } from "./Rooms/RoomsRouter";
+import { LogsView } from "./Navigation/Logs/Logs";
+import { ButtonsView } from "./Navigation/Buttons/Buttons";
+import { RoomsRouter } from "./Navigation/Rooms/RoomsRouter";
 
 interface RouteProps {}
 
@@ -35,6 +35,8 @@ export const Routes: React.FC<RouteProps> = ({}) => {
         tabBarOptions={{
           activeTintColor: "tomato",
           inactiveTintColor: "gray",
+          activeBackgroundColor: "#000",
+          inactiveBackgroundColor: "#000",
         }}
       >
         <Tab.Screen name="Chat" component={ChatView} />

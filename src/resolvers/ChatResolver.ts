@@ -1,35 +1,29 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import ChatMessage from "../entities/chat";
+import { GET_CHAT_MESSAGES } from "../requests/chat";
 
-const GET_CHAT_MESSAGES = gql`
-  query($id: Int!) {
-    Messages(id: $id) {
-      message
-      userId
-      time
-      id
-    }
-  }
-`;
-
-export interface ChatMessage {
+interface AddChatMessagesVars {
   id: number;
+}
+
+interface ChatMessageInput {
+  message: String;
   userId: number;
-  message: string;
-  time: Date;
 }
 
-interface ChatMessagesData {
-  Messages: ChatMessage[];
-}
+export default class ChatResolver {
+  public static GetMessages(id: number = 0) {
+    return useQuery<{ Messages: ChatMessage[] }, AddChatMessagesVars>(
+      GET_CHAT_MESSAGES,
+      {
+        variables: {
+          id: id,
+        },
+      }
+    );
+  }
 
-interface ChatMessagesVars {
-  id: number;
-}
-
-export function GetChatMessages(id: number = 0) {
-  return useQuery<ChatMessagesData, ChatMessagesVars>(GET_CHAT_MESSAGES, {
-    variables: {
-      id: id,
-    },
-  });
+  // public static SendMessage(message: ChatMessageInput) {
+  // 	return useQuery<
+  // }
 }
