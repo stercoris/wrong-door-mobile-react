@@ -1,8 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { ChatMessage, User } from "../../types";
 import { Center } from "../../views/Center";
-import { User } from "../../resolvers/UsersResolver";
-import ChatMessage from "../../entities/chat";
 
 const messageContainer = StyleSheet.create({
   messageText: {
@@ -67,7 +66,10 @@ export const Message: React.FC<MessageProps> = ({
       <View>
         {!isStacked && (
           <View style={profile.profileBox}>
-            <Image source={{ uri: user.image }} style={profile.image} />
+            <Image
+              source={{ uri: user.image as string }}
+              style={profile.image}
+            />
             <Text style={profile.usernameText} numberOfLines={1}>
               {user.username}
             </Text>

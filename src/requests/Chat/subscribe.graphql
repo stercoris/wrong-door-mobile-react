@@ -1,0 +1,8 @@
+subscription SubsribeToNewMessages {
+  newMessage {
+    id
+    userId
+    message
+    time
+  }
+}

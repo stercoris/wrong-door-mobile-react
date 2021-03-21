@@ -1,0 +1,8 @@
+mutation AddChatMessage($message: ChatMessageInput!) {
+  AddMessage(message: $message) {
+    id
+    userId
+    message
+    time
+  }
+}
