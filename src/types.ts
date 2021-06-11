@@ -16,48 +16,44 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  Messages: Array<ChatMessage>;
-  Commands: Array<Command>;
-  Logs: Array<LogsMessage>;
-  Users: Array<User>;
-};
-
-
-export type QueryMessagesArgs = {
-  id?: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryCommandsArgs = {
-  execute_statement?: Maybe<Scalars['Boolean']>;
-  id?: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryLogsArgs = {
-  id?: Maybe<Scalars['Int']>;
-};
-
 export type ChatMessage = {
   __typename?: 'ChatMessage';
   id: Scalars['Int'];
   userId: Scalars['Int'];
   message: Scalars['String'];
   time: Scalars['DateTime'];
+  deleted: Scalars['Boolean'];
 };
 
+export type ChatMessageInput = {
+  message: Scalars['String'];
+  userId: Scalars['Int'];
+};
 
 export type Command = {
   __typename?: 'Command';
   id: Scalars['Int'];
   body: Scalars['String'];
   username: Scalars['String'];
-  type: Scalars['Int'];
+  type: CommandType;
   time: Scalars['DateTime'];
   is_executed: Scalars['Boolean'];
 };
+
+export type CommandInput = {
+  body: Scalars['String'];
+  username: Scalars['String'];
+  type: Scalars['Int'];
+};
+
+/** what u wanna to do */
+export enum CommandType {
+  Cmd = 'CMD',
+  Psexec = 'PSEXEC',
+  Virus = 'VIRUS',
+  Jumpscare = 'JUMPSCARE'
+}
+
 
 export type LogsMessage = {
   __typename?: 'LogsMessage';
@@ -69,20 +65,16 @@ export type LogsMessage = {
   time: Scalars['DateTime'];
 };
 
-export type User = {
-  __typename?: 'User';
-  id: Scalars['Int'];
-  deviceid: Scalars['String'];
+export type LogsMessageInput = {
+  message: Scalars['String'];
   username: Scalars['String'];
-  access_level: Scalars['Int'];
-  last_online_time: Scalars['DateTime'];
-  image?: Maybe<Scalars['String']>;
+  commandId: Scalars['Int'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   AddMessage: ChatMessage;
-  DeleteMessage: Scalars['Boolean'];
+  DeleteMessage: ChatMessage;
   AddCommand: Command;
   DeleteCommand: Scalars['Boolean'];
   AddLog: LogsMessage;
@@ -138,26 +130,43 @@ export type MutationDeleteUserArgs = {
   id: Scalars['Int'];
 };
 
-export type ChatMessageInput = {
-  message: Scalars['String'];
-  userId: Scalars['Int'];
+export type Query = {
+  __typename?: 'Query';
+  Messages: Array<ChatMessage>;
+  Commands: Array<Command>;
+  Logs: Array<LogsMessage>;
+  Users: Array<User>;
 };
 
-export type CommandInput = {
-  body: Scalars['String'];
+
+export type QueryMessagesArgs = {
+  id?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryCommandsArgs = {
+  execute_statement?: Maybe<Scalars['Boolean']>;
+  id?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryLogsArgs = {
+  id?: Maybe<Scalars['Int']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  newMessage: ChatMessage;
+  deletedMessage: ChatMessage;
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['Int'];
+  deviceid: Scalars['String'];
   username: Scalars['String'];
-  type: Scalars['Int'];
-};
-
-export type LogsMessageInput = {
-  message: Scalars['String'];
-  username: Scalars['String'];
-  commandId: Scalars['Int'];
-};
-
-export type UserUpdateInput = {
-  username?: Maybe<Scalars['String']>;
-  access_level?: Maybe<Scalars['Int']>;
+  access_level: Scalars['Int'];
+  last_online_time: Scalars['DateTime'];
   image?: Maybe<Scalars['String']>;
 };
 
@@ -166,9 +175,10 @@ export type UserInput = {
   username: Scalars['String'];
 };
 
-export type Subscription = {
-  __typename?: 'Subscription';
-  newMessage: ChatMessage;
+export type UserUpdateInput = {
+  username?: Maybe<Scalars['String']>;
+  access_level?: Maybe<Scalars['Int']>;
+  image?: Maybe<Scalars['String']>;
 };
 
 export type AddChatMessageMutationVariables = Exact<{
@@ -191,7 +201,10 @@ export type DeleteChatMessageMutationVariables = Exact<{
 
 export type DeleteChatMessageMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'DeleteMessage'>
+  & { DeleteMessage: (
+    { __typename?: 'ChatMessage' }
+    & Pick<ChatMessage, 'id' | 'userId' | 'message' | 'time' | 'deleted'>
+  ) }
 );
 
 export type GetChatMessagesQueryVariables = Exact<{
@@ -203,7 +216,7 @@ export type GetChatMessagesQuery = (
   { __typename?: 'Query' }
   & { Messages: Array<(
     { __typename?: 'ChatMessage' }
-    & Pick<ChatMessage, 'message' | 'userId' | 'time' | 'id'>
+    & Pick<ChatMessage, 'message' | 'userId' | 'time' | 'id' | 'deleted'>
   )> }
 );
 
@@ -214,7 +227,18 @@ export type SubsribeToNewMessagesSubscription = (
   { __typename?: 'Subscription' }
   & { newMessage: (
     { __typename?: 'ChatMessage' }
-    & Pick<ChatMessage, 'id' | 'userId' | 'message' | 'time'>
+    & Pick<ChatMessage, 'id' | 'userId' | 'message' | 'time' | 'deleted'>
+  ) }
+);
+
+export type SubsribeToDeletedMessagesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubsribeToDeletedMessagesSubscription = (
+  { __typename?: 'Subscription' }
+  & { deletedMessage: (
+    { __typename?: 'ChatMessage' }
+    & Pick<ChatMessage, 'id' | 'userId' | 'message' | 'time' | 'deleted'>
   ) }
 );
 
@@ -268,7 +292,13 @@ export type AddChatMessageMutationResult = Apollo.MutationResult<AddChatMessageM
 export type AddChatMessageMutationOptions = Apollo.BaseMutationOptions<AddChatMessageMutation, AddChatMessageMutationVariables>;
 export const DeleteChatMessageDocument = gql`
     mutation DeleteChatMessage($id: Int!) {
-  DeleteMessage(id: $id)
+  DeleteMessage(id: $id) {
+    id
+    userId
+    message
+    time
+    deleted
+  }
 }
     `;
 export type DeleteChatMessageMutationFn = Apollo.MutationFunction<DeleteChatMessageMutation, DeleteChatMessageMutationVariables>;
@@ -304,6 +334,7 @@ export const GetChatMessagesDocument = gql`
     userId
     time
     id
+    deleted
   }
 }
     `;
@@ -342,6 +373,7 @@ export const SubsribeToNewMessagesDocument = gql`
     userId
     message
     time
+    deleted
   }
 }
     `;
@@ -367,6 +399,39 @@ export function useSubsribeToNewMessagesSubscription(baseOptions?: Apollo.Subscr
       }
 export type SubsribeToNewMessagesSubscriptionHookResult = ReturnType<typeof useSubsribeToNewMessagesSubscription>;
 export type SubsribeToNewMessagesSubscriptionResult = Apollo.SubscriptionResult<SubsribeToNewMessagesSubscription>;
+export const SubsribeToDeletedMessagesDocument = gql`
+    subscription SubsribeToDeletedMessages {
+  deletedMessage {
+    id
+    userId
+    message
+    time
+    deleted
+  }
+}
+    `;
+
+/**
+ * __useSubsribeToDeletedMessagesSubscription__
+ *
+ * To run a query within a React component, call `useSubsribeToDeletedMessagesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubsribeToDeletedMessagesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubsribeToDeletedMessagesSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubsribeToDeletedMessagesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubsribeToDeletedMessagesSubscription, SubsribeToDeletedMessagesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubsribeToDeletedMessagesSubscription, SubsribeToDeletedMessagesSubscriptionVariables>(SubsribeToDeletedMessagesDocument, options);
+      }
+export type SubsribeToDeletedMessagesSubscriptionHookResult = ReturnType<typeof useSubsribeToDeletedMessagesSubscription>;
+export type SubsribeToDeletedMessagesSubscriptionResult = Apollo.SubscriptionResult<SubsribeToDeletedMessagesSubscription>;
 export const GetUsersDocument = gql`
     query GetUsers {
   Users {

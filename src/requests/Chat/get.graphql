@@ -1,8 +1,9 @@
 query GetChatMessages($id: Int!) {
-  Messages(id: $id) {
-    message
-    userId
-    time
-    id
-  }
+	Messages(id: $id) {
+		message
+		userId
+		time
+		id
+		deleted
+	}
 }

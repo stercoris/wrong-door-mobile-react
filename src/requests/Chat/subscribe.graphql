@@ -1,8 +1,19 @@
 subscription SubsribeToNewMessages {
-  newMessage {
-    id
-    userId
-    message
-    time
-  }
+	newMessage {
+		id
+		userId
+		message
+		time
+		deleted
+	}
+}
+
+subscription SubsribeToDeletedMessages {
+	deletedMessage {
+		id
+		userId
+		message
+		time
+		deleted
+	}
 }
