@@ -1,12 +1,13 @@
+// @refresh reset
 import React, { useEffect, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
+import { useScrollIntoView } from "react-native-scroll-into-view";
 import {
 	useGetChatMessagesQuery,
 	useGetUsersQuery,
 	useSubsribeToDeletedMessagesSubscription,
 	useSubsribeToNewMessagesSubscription,
-} from "../../../types";
-import { Center } from "../../../views/Center";
+} from "../../Api/types";
 import { messagesConverter } from "./messageConverter";
 
 interface MessagesViewProps {}
@@ -18,6 +19,14 @@ export const MesssagesView: React.FC<MessagesViewProps> = () => {
 	const [Messages, SetMessages] = useState<JSX.Element[]>([]);
 	const newMessage = useSubsribeToNewMessagesSubscription();
 	const Chat = useGetChatMessagesQuery({ variables: { id: 0 } });
+	const scrollIntoView = useScrollIntoView();
+
+	const scrollToMessage = async (messageid: number) => {
+		const message = Messages.find(
+			(message) => message.key == messageid
+		) as unknown as View;
+		scrollIntoView(message);
+	};
 
 	useEffect(() => {
 		scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -50,13 +59,5 @@ export const MesssagesView: React.FC<MessagesViewProps> = () => {
 		}
 	}, [newMessage.data?.newMessage]);
 
-	if (Chat.loading || Users.loading) {
-		return (
-			<Center>
-				<Text>Loading</Text>
-			</Center>
-		);
-	}
-
-	return <ScrollView ref={scrollViewRef}>{Messages}</ScrollView>;
+	return <>{Messages}</>;
 };

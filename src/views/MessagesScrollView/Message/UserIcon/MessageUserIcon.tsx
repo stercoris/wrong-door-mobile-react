@@ -1,24 +1,30 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { User } from "../../../../../types";
+import { User } from "../../../../Api/types";
 
 const profile = StyleSheet.create({
-	usernameText: {
-		color: "#fff",
+	profileBox: {
+		flex: 1,
+		flexDirection: "column",
+		justifyContent: "space-between",
+		alignItems: "stretch",
 	},
 
-	profileBox: {
-		flexDirection: "column",
-		width: 120,
+	usernameText: {
+		color: "#fff",
 		flex: 1,
-		justifyContent: "space-between",
-		alignItems: "center",
+		alignSelf: "center",
+	},
+
+	imageWrapper: {
+		flex: 10,
+		width: "100%",
 	},
 
 	image: {
 		borderRadius: 50,
-		width: 60,
-		height: 60,
+		width: "100%",
+		height: "100%",
 	},
 });
 
@@ -29,7 +35,9 @@ interface UserIconProps {
 export const UserIcon: React.FC<UserIconProps> = ({ user }) => {
 	return (
 		<View style={profile.profileBox}>
-			<Image source={{ uri: user.image! }} style={profile.image} />
+			<View style={profile.imageWrapper}>
+				<Image source={{ uri: user.image! }} style={profile.image} />
+			</View>
 			<Text style={profile.usernameText} numberOfLines={1}>
 				{user.username}
 			</Text>

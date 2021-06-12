@@ -1,6 +1,6 @@
 import React from "react";
-import { ChatMessage, User } from "../../../types";
-import { Message } from "./ChatMessage";
+import { ChatMessage, User } from "../../Api/types";
+import { Message } from "./Message/ChatMessage";
 
 let prevId = 0;
 
@@ -11,6 +11,8 @@ export function messagesConverter(
 	return messages.map((message) => {
 		const user = users.find((user) => user.id === message.userId);
 
+		const isStacked = message.userId === prevId;
+
 		prevId = message.userId;
 
 		if (user) {
@@ -18,7 +20,7 @@ export function messagesConverter(
 				<Message
 					message={message}
 					user={user}
-					isStacked={message.userId === prevId}
+					isStacked={isStacked}
 					key={message.id}
 				/>
 			);

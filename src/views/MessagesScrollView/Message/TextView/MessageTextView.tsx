@@ -1,6 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
-import { ChatMessage, useDeleteChatMessageMutation } from "../../../../types";
+import {
+	ChatMessage,
+	useDeleteChatMessageMutation,
+} from "../../../../Api/types";
 
 const messageContainer = StyleSheet.create({
 	messageText: {

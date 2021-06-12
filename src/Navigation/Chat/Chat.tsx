@@ -1,14 +1,19 @@
 // @refresh reset
 import { __EnumValue } from "graphql";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { MesssagesView } from "./ChatMessages/MesssagesView";
-import { MessageInput } from "./MessageInput/MessageInput";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { wrapScrollView } from "react-native-scroll-into-view";
+import { MesssagesView } from "@Views/MessagesScrollView/MesssagesView";
+import { MessageInput } from "@Views/MessageInput/MessageInput";
+
+const CustomScrollView = wrapScrollView(ScrollView);
 
 const styles = StyleSheet.create({
 	view: {
 		flex: 1,
 		backgroundColor: "#000",
+		display: "flex",
+		position: "relative",
 	},
 
 	chat: {
@@ -17,7 +22,7 @@ const styles = StyleSheet.create({
 	},
 
 	input: {
-		height: 80,
+		height: 50,
 	},
 });
 
@@ -27,7 +32,9 @@ export const ChatView: React.FC<ChatProps> = () => {
 	return (
 		<View style={styles.view}>
 			<View style={styles.chat}>
-				<MesssagesView />
+				<CustomScrollView>
+					<MesssagesView />
+				</CustomScrollView>
 			</View>
 
 			<View style={styles.input}>

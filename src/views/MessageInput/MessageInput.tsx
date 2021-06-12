@@ -2,22 +2,21 @@ import React, { useRef, useState } from "react";
 import { Button, StyleSheet, TouchableHighlight, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import { useAddChatMessageMutation } from "../../../types";
+import { useAddChatMessageMutation } from "../../Api/types";
 import { isMessageValid } from "./messageIsValid";
 
 const styles = StyleSheet.create({
 	view: {
 		flex: 1,
 		flexDirection: "row",
+		backgroundColor: "#002222",
 	},
 
 	input: {
 		flex: 5,
-		backgroundColor: "#002222",
 		color: "white",
 		padding: 10,
-		margin: 10,
-		borderRadius: 10,
+		fontSize: 20,
 	},
 
 	sendButton: {
@@ -38,13 +37,15 @@ export const MessageInput: React.FC<MessageInputProps> = () => {
 				message: { message: messageBody.trim(), userId: 8 },
 			},
 		});
+		setMesasgeBody("");
 	};
 
 	return (
 		<View style={styles.view}>
 			<TextInput
-				onSubmitEditing={Send}
 				style={styles.input}
+				placeholder={"Message"}
+				placeholderTextColor={"#555555"}
 				value={messageBody}
 				onChangeText={(text) => setMesasgeBody(text)}
 			/>

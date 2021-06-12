@@ -10,9 +10,9 @@ import {
 	ChatMessage,
 	useDeleteChatMessageMutation,
 	User,
-} from "../../../types";
-import { UserIcon } from "./Message/UserIcon/MessageUserIcon";
-import { MessageBox } from "./Message/MessageTextView";
+} from "../../../Api/types";
+import { UserIcon } from "./UserIcon/MessageUserIcon";
+import { MessageBox } from "./TextView/MessageTextView";
 import { DeleteMessageButton } from "./MessageButtons/DeleteButton";
 
 interface MessageProps {
@@ -34,11 +34,20 @@ export const Message: React.FC<MessageProps> = ({
 			style={{
 				flexDirection: isSelfMessage ? "row-reverse" : "row",
 				alignItems: "center",
-				flex: 1,
+				display: "flex",
 				marginTop: isStacked ? 5 : 10,
 			}}
 		>
-			{!isStacked && <UserIcon user={user} />}
+			{!isStacked && (
+				<View
+					style={{
+						flex: 1,
+					}}
+				>
+					<UserIcon user={user} />
+				</View>
+			)}
+
 			<View style={{ flex: 7 }}>
 				<MessageBox message={message} />
 			</View>

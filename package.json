@@ -1,5 +1,6 @@
 {
 	"main": "node_modules/expo/AppEntry.js",
+	"private": true,
 	"scripts": {
 		"start": "expo start",
 		"android": "expo start --android",
@@ -13,16 +14,27 @@
 		"@react-navigation/bottom-tabs": "^5.11.8",
 		"@react-navigation/native": "^5.9.3",
 		"@react-navigation/stack": "^5.14.3",
+		"babel-plugin-inline-dotenv": "^1.6.0",
+		"babel-plugin-macros": "^3.1.0",
+		"babel-preset-expo": "^8.3.0",
+		"babel-preset-react-native": "^4.0.1",
+		"dotenv": "^10.0.0",
 		"expo": "~40.0.0",
 		"expo-status-bar": "~1.0.3",
+		"fs": "^0.0.1-security",
 		"graphql": "^15.5.0",
+		"metro-react-native-babel-preset": "^0.66.0",
+		"module-resolver": "^1.0.0",
 		"react": "^17.0.1",
 		"react-dom": "16.13.1",
 		"react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+		"react-native-dotenv": "^2.5.5",
 		"react-native-gesture-handler": "^1.10.3",
+		"react-native-keyboard-aware-scroll-view": "^0.9.4",
 		"react-native-reanimated": "^2.0.0",
 		"react-native-safe-area-context": "^3.2.0",
 		"react-native-screens": "^2.18.1",
+		"react-native-scroll-into-view": "^2.0.1",
 		"react-native-web": "~0.13.12",
 		"subscriptions-transport-ws": "^0.9.18"
 	},
@@ -35,7 +47,9 @@
 		"@types/react": "~16.9.35",
 		"@types/react-dom": "~16.9.8",
 		"@types/react-native": "~0.63.2",
+		"@types/react-native-dotenv": "^0.2.0",
+		"babel-plugin-module-resolver": "^4.1.0",
+		"babel-plugin-tsconfig-paths": "^1.0.1",
 		"typescript": "~4.0.0"
-	},
-	"private": true
+	}
 }
