@@ -1,63 +1,30 @@
 // @refresh reset
-import React, { useEffect, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
-import { useScrollIntoView } from "react-native-scroll-into-view";
-import {
-	useGetChatMessagesQuery,
-	useGetUsersQuery,
-	useSubsribeToDeletedMessagesSubscription,
-	useSubsribeToNewMessagesSubscription,
-} from "../../Api/types";
-import { messagesConverter } from "./messageConverter";
+import React from "react";
+import { ScrollView, Text, View } from "react-native";
+import { useGetUsersQuery } from "@Api";
+import { Message, convertMessages } from "./messageConverter";
+import { wrapScrollView } from "react-native-scroll-into-view";
 
-interface MessagesViewProps {}
+interface MessagesViewProps {
+	messages: Message[];
+}
 
-export const MesssagesView: React.FC<MessagesViewProps> = () => {
+const CustomScrollView = wrapScrollView(ScrollView);
+
+export const MesssagesView: React.FC<MessagesViewProps> = ({ messages }) => {
 	const Users = useGetUsersQuery();
-	const deletedMessage = useSubsribeToDeletedMessagesSubscription();
-	const scrollViewRef = useRef<ScrollView>(null);
-	const [Messages, SetMessages] = useState<JSX.Element[]>([]);
-	const newMessage = useSubsribeToNewMessagesSubscription();
-	const Chat = useGetChatMessagesQuery({ variables: { id: 0 } });
-	const scrollIntoView = useScrollIntoView();
 
-	const scrollToMessage = async (messageid: number) => {
-		const message = Messages.find(
-			(message) => message.key == messageid
-		) as unknown as View;
-		scrollIntoView(message);
-	};
+	if (Users.loading) {
+		return (
+			<View>
+				<Text>Loading</Text>
+			</View>
+		);
+	}
 
-	useEffect(() => {
-		scrollViewRef.current?.scrollToEnd({ animated: true });
-	}, [Messages]);
-
-	useEffect(() => {
-		const deletedM = deletedMessage.data?.deletedMessage;
-		const messages_with_deleted = Messages.filter((messageEl) => {
-			return Number(messageEl.key) != Number(deletedM?.id);
-		});
-		SetMessages(messages_with_deleted);
-	}, [deletedMessage.data?.deletedMessage]);
-
-	useEffect(() => {
-		const incomingMessages = Chat.data?.Messages;
-		if (incomingMessages && Users.data?.Users) {
-			const newMessageComponents = messagesConverter(
-				Users.data?.Users,
-				...incomingMessages
-			);
-			SetMessages([...Messages, ...newMessageComponents]);
-		}
-	}, [Chat.loading]);
-
-	useEffect(() => {
-		const newM = newMessage.data?.newMessage;
-		if (newM && Users.data?.Users) {
-			const newMessageComponents = messagesConverter(Users.data?.Users, newM);
-			SetMessages([...Messages, ...newMessageComponents]);
-		}
-	}, [newMessage.data?.newMessage]);
-
-	return <>{Messages}</>;
+	return (
+		<CustomScrollView>
+			{convertMessages(Users.data?.Users!, ...messages)}
+		</CustomScrollView>
+	);
 };

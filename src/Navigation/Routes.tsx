@@ -42,10 +42,10 @@ export const Routes: React.FC<RouteProps> = () => {
 					inactiveBackgroundColor: "#000",
 				}}
 			>
-				<Tab.Screen name="Chat" component={ChatView} />
-				<Tab.Screen name="Logs" component={LogsView} />
-				<Tab.Screen name="Buttons" component={ButtonsView} />
-				<Tab.Screen name="Rooms" component={RoomsRouter} />
+				<Tab.Screen name={Tabs.Chat} component={ChatView} />
+				<Tab.Screen name={Tabs.Logs} component={LogsView} />
+				<Tab.Screen name={Tabs.Buttons} component={ButtonsView} />
+				<Tab.Screen name={Tabs.Rooms} component={RoomsRouter} />
 			</Tab.Navigator>
 		</NavigationContainer>
 	);

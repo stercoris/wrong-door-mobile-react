@@ -3,7 +3,6 @@ import { Button, StyleSheet, TouchableHighlight, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { useAddChatMessageMutation } from "../../Api/types";
-import { isMessageValid } from "./messageIsValid";
 
 const styles = StyleSheet.create({
 	view: {
@@ -25,18 +24,19 @@ const styles = StyleSheet.create({
 	},
 });
 
-interface MessageInputProps {}
+interface MessageInputProps {
+	isMessageValid: (message: string) => boolean;
+	sendMessage: (message: string) => void;
+}
 
-export const MessageInput: React.FC<MessageInputProps> = () => {
+export const MessageInput: React.FC<MessageInputProps> = ({
+	isMessageValid,
+	sendMessage,
+}) => {
 	const [messageBody, setMesasgeBody] = useState<string>("");
-	const [sendMessage] = useAddChatMessageMutation();
 
 	const Send = () => {
-		sendMessage({
-			variables: {
-				message: { message: messageBody.trim(), userId: 8 },
-			},
-		});
+		sendMessage(messageBody.trim());
 		setMesasgeBody("");
 	};
 
@@ -47,7 +47,7 @@ export const MessageInput: React.FC<MessageInputProps> = () => {
 				placeholder={"Message"}
 				placeholderTextColor={"#555555"}
 				value={messageBody}
-				onChangeText={(text) => setMesasgeBody(text)}
+				onChangeText={setMesasgeBody}
 			/>
 			<View style={styles.sendButton}>
 				<TouchableHighlight

@@ -19,44 +19,41 @@ interface MessageProps {
 	message: ChatMessage;
 	user: User;
 	isSelfMessage?: boolean;
-	isStacked?: boolean;
+	isUserProfileShown?: boolean;
 }
 
 export const Message: React.FC<MessageProps> = ({
 	message,
 	user,
 	isSelfMessage = false,
-	isStacked = false,
+	isUserProfileShown = false,
 }) => {
 	if (user.id === 8) isSelfMessage = true;
+
 	return (
 		<View
 			style={{
 				flexDirection: isSelfMessage ? "row-reverse" : "row",
 				alignItems: "center",
 				display: "flex",
-				marginTop: isStacked ? 5 : 10,
+				marginVertical: !isUserProfileShown ? 5 : 10,
 			}}
 		>
-			{!isStacked && (
-				<View
-					style={{
-						flex: 1,
-					}}
-				>
-					<UserIcon user={user} />
-				</View>
-			)}
-
-			<View style={{ flex: 7 }}>
+			<View style={{ flex: 10, marginRight: 30 }}>
 				<MessageBox message={message} />
 			</View>
 
-			{isSelfMessage && (
-				<View style={{ flex: 1, alignItems: "center" }}>
-					<DeleteMessageButton id={message.id} />
-				</View>
-			)}
+			<View
+				style={{
+					flex: !isUserProfileShown ? 1 : 3,
+					height: "100%",
+					flexDirection: "column-reverse",
+					display: "flex",
+					alignItems: "center",
+				}}
+			>
+				{isUserProfileShown && <UserIcon user={user} />}
+			</View>
 		</View>
 	);
 };

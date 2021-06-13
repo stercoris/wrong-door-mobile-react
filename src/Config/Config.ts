@@ -1,5 +1,3 @@
-console.log(process.env);
-
 export default class Config {
 	public static ServerURL: string = process.env.SERVER_URL!;
 	public static WebSocketPORT = Number(process.env.WEBSOCKET_PORT!);

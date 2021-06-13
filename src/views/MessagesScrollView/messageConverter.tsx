@@ -2,25 +2,35 @@ import React from "react";
 import { ChatMessage, User } from "../../Api/types";
 import { Message } from "./Message/ChatMessage";
 
-let prevId = 0;
+export interface Message {
+	id: number;
+	userId: number;
+	message: string;
+	time: Date;
+	deleted: boolean;
+}
 
-export function messagesConverter(
+export function convertMessages(
 	users: User[],
-	...messages: ChatMessage[]
+	...messages: Message[]
 ): JSX.Element[] {
-	return messages.map((message) => {
+	return messages.map((message, i, allMessages) => {
 		const user = users.find((user) => user.id === message.userId);
 
-		const isStacked = message.userId === prevId;
+		const isLastMessage = () => i == allMessages.length - 1;
+		const isNextMessageFromDifferentUser = () =>
+			allMessages[i + 1].userId !== user!.id;
 
-		prevId = message.userId;
+		let isStacked = false;
+
+		isStacked = !isLastMessage() ? isNextMessageFromDifferentUser() : true;
 
 		if (user) {
 			return (
 				<Message
 					message={message}
 					user={user}
-					isStacked={isStacked}
+					isUserProfileShown={isStacked}
 					key={message.id}
 				/>
 			);
