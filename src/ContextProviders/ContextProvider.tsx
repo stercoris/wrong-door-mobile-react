@@ -1,39 +1,37 @@
+import { useGetUsersQuery, User } from "@Api";
+import { getDeviceId } from "@Helpers/getDeviceId";
 import React, { useState } from "react";
 
-type UserInfo = null | {
-  userid: string;
-  username: string;
-};
+type UserInfo = null | User;
 
 export const UserContext = React.createContext<{
-  user: UserInfo;
-  setName: (name: string) => void;
-  setUserId: () => void;
+	user: UserInfo;
+	login: () => Promise<void>;
+	// setName: (name: string) => void;
+	// changePicture: (picture: string) => void;
 }>({
-  user: null,
-  setName: (name: string) => {},
-  setUserId: () => {},
+	user: null,
+	login: async () => {},
+	// setName: (name: string) => {},
+	// changePicture: () => {},
 });
 
 interface UserContextProps {}
 
 export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
-  const [user, setUser] = useState<UserInfo>(null);
-  return (
-    <UserContext.Provider
-      value={{
-        user,
-        setName: (name: string) => {
-          const newUser = user;
-          if (newUser) {
-            newUser.username = name;
-            setUser(newUser);
-          }
-        },
-        setUserId: () => {},
-      }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
+	const [user, setUser] = useState<UserInfo>(null);
+	const Users = useGetUsersQuery();
+
+	return (
+		<UserContext.Provider
+			value={{
+				user,
+				login: async () => {
+					const deviceid = getDeviceId();
+				},
+			}}
+		>
+			{children}
+		</UserContext.Provider>
+	);
 };

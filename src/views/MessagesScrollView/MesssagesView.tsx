@@ -1,18 +1,22 @@
 // @refresh reset
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { useGetUsersQuery } from "@Api";
 import { Message, convertMessages } from "./messageConverter";
-import { wrapScrollView } from "react-native-scroll-into-view";
 
 interface MessagesViewProps {
 	messages: Message[];
 }
 
-const CustomScrollView = wrapScrollView(ScrollView);
-
 export const MesssagesView: React.FC<MessagesViewProps> = ({ messages }) => {
 	const Users = useGetUsersQuery();
+	const scrollView = useRef<ScrollView>(null);
+
+	useEffect(() => {
+		if (scrollView) {
+			scrollView.current?.scrollToEnd({ animated: false });
+		}
+	}, [messages]);
 
 	if (Users.loading) {
 		return (
@@ -23,8 +27,8 @@ export const MesssagesView: React.FC<MessagesViewProps> = ({ messages }) => {
 	}
 
 	return (
-		<CustomScrollView>
+		<ScrollView ref={scrollView}>
 			{convertMessages(Users.data?.Users!, ...messages)}
-		</CustomScrollView>
+		</ScrollView>
 	);
 };

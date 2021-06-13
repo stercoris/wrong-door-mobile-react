@@ -13,9 +13,17 @@ module.exports = function (api) {
 						".jsx",
 						".ts",
 						".tsx",
+
 						".android.js",
+						".android.ts",
 						".android.tsx",
+
+						".web.js",
+						".web.ts",
+						".web.tsx",
+
 						".ios.js",
+						".ios.ts",
 						".ios.tsx",
 					],
 					rootDir: ".",
