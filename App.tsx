@@ -1,10 +1,16 @@
 import React from "react";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { Routes } from "./src/Navigation/Routes";
-import { StatusBar, StyleSheet } from "react-native";
+import { Controls } from "./src/Navigation/ControlsScreen/Controls";
+import { StatusBar } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import Config from "@Config";
+import { Navigation } from "@Tabs/Navigation";
+// import { useFonts, Montserrat_100Thin } from "@expo-google-fonts/montserrat";
+
+// ---- CONTEXT ----
+import { ContextProvider } from "@ContextProviders/ContextProvider";
+// ---- CONTEXT ----
 
 const wsLink = new WebSocketLink({
 	uri: `ws://${Config.ServerURL}:${Config.WebSocketPORT}/graphql`,
@@ -20,13 +26,17 @@ const client = new ApolloClient({
 });
 
 export default function App() {
+	// useFonts({ Montserrat_100Thin });
+
 	return (
 		<SafeAreaProvider>
 			<ApolloProvider client={client}>
-				<StatusBar backgroundColor="black" barStyle="light-content" />
-				<SafeAreaView style={{ flex: 1 }}>
-					<Routes />
-				</SafeAreaView>
+				<ContextProvider>
+					<StatusBar backgroundColor="black" barStyle="light-content" />
+					<SafeAreaView style={{ flex: 1 }}>
+						<Navigation />
+					</SafeAreaView>
+				</ContextProvider>
 			</ApolloProvider>
 		</SafeAreaProvider>
 	);

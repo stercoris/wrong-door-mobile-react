@@ -1,0 +1,11 @@
+mutation DeleteCommand($id: Int!) {
+	DeleteCommand(id: $id) {
+		id
+		body
+		username
+		type
+		time
+		is_executed
+		deleted
+	}
+}

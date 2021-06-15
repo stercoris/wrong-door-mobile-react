@@ -1,8 +1,8 @@
 import React from "react";
 import { useContext } from "react";
 import { Text, View } from "react-native";
-import { UserContext } from "@ContextProviders/ContextProvider";
 import { Center } from "@Views/Center";
+import { UserContext } from "@ContextProviders/ApiProviders/UserInfoProvider";
 
 interface ButtonsProps {}
 

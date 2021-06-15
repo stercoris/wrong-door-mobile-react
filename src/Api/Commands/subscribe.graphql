@@ -1,0 +1,23 @@
+subscription SubscribeToNewCommands {
+	newCommand {
+		id
+		body
+		username
+		type
+		time
+		is_executed
+		deleted
+	}
+}
+
+subscription SubscribeToDeletedCommand {
+	deletedCommand {
+		id
+		body
+		username
+		type
+		time
+		is_executed
+		deleted
+	}
+}

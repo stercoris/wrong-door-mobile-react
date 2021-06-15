@@ -1,0 +1,11 @@
+query GetCommands($execute_statement: Boolean) {
+	Commands(execute_statement: $execute_statement) {
+		id
+		body
+		username
+		type
+		time
+		is_executed
+		deleted
+	}
+}

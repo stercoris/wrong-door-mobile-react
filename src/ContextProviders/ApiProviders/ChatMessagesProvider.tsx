@@ -8,10 +8,8 @@ import {
 } from "@Api";
 import React, { useEffect, useState } from "react";
 
-type ChatMessages = ChatMessage[];
-
 export const ChatMessagesContext = React.createContext<{
-	messages: ChatMessages;
+	messages: ChatMessage[];
 	send: (message: string, userId: number) => Promise<void>;
 	delete: (messageId: number) => Promise<void>;
 }>({
@@ -44,11 +42,11 @@ export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 	useEffect(() => {
 		const deletedM = deletedMessage.data?.deletedMessage;
 
-		const messages_with_deleted = messages.filter(
+		const messagesWithDeleted = messages.filter(
 			(messageEl) => messageEl.id != deletedM?.id
 		);
 
-		setMessages(messages_with_deleted);
+		setMessages(messagesWithDeleted);
 	}, [deletedMessage.data?.deletedMessage]);
 
 	useEffect(() => {

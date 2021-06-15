@@ -1,37 +1,21 @@
-import { useGetUsersQuery, User } from "@Api";
-import { getDeviceId } from "@Helpers/getDeviceId";
-import React, { useState } from "react";
+import React from "react";
+import { ChatMesssagesProvider } from "./ApiProviders/ChatMessagesProvider";
+import { CommandsProvider } from "./ApiProviders/CommandsProvider";
+import { LogMessagesProvider } from "./ApiProviders/LogsMessagesProvider";
+import { UserInfoProvider } from "./ApiProviders/UserInfoProvider";
 
-type UserInfo = null | User;
+interface ContextProviderProps {}
 
-export const UserContext = React.createContext<{
-	user: UserInfo;
-	login: () => Promise<void>;
-	// setName: (name: string) => void;
-	// changePicture: (picture: string) => void;
-}>({
-	user: null,
-	login: async () => {},
-	// setName: (name: string) => {},
-	// changePicture: () => {},
-});
-
-interface UserContextProps {}
-
-export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
-	const [user, setUser] = useState<UserInfo>(null);
-	const Users = useGetUsersQuery();
-
+export const ContextProvider: React.FC<ContextProviderProps> = ({
+	children,
+}) => {
 	return (
-		<UserContext.Provider
-			value={{
-				user,
-				login: async () => {
-					const deviceid = getDeviceId();
-				},
-			}}
-		>
-			{children}
-		</UserContext.Provider>
+		<UserInfoProvider>
+			<CommandsProvider>
+				<LogMessagesProvider>
+					<ChatMesssagesProvider>{children}</ChatMesssagesProvider>
+				</LogMessagesProvider>
+			</CommandsProvider>
+		</UserInfoProvider>
 	);
 };

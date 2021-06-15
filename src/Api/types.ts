@@ -38,6 +38,7 @@ export type Command = {
   type: CommandType;
   time: Scalars['DateTime'];
   is_executed: Scalars['Boolean'];
+  deleted: Scalars['Boolean'];
 };
 
 export type CommandInput = {
@@ -76,7 +77,7 @@ export type Mutation = {
   AddMessage: ChatMessage;
   DeleteMessage: ChatMessage;
   AddCommand: Command;
-  DeleteCommand: Scalars['Boolean'];
+  DeleteCommand: Command;
   AddLog: LogsMessage;
   DeleteLog: Scalars['Boolean'];
   UpdateUser: User;
@@ -158,6 +159,8 @@ export type Subscription = {
   __typename?: 'Subscription';
   newMessage: ChatMessage;
   deletedMessage: ChatMessage;
+  newCommand: Command;
+  deletedCommand: Command;
 };
 
 export type User = {
@@ -239,6 +242,67 @@ export type SubsribeToDeletedMessagesSubscription = (
   & { deletedMessage: (
     { __typename?: 'ChatMessage' }
     & Pick<ChatMessage, 'id' | 'userId' | 'message' | 'time' | 'deleted'>
+  ) }
+);
+
+export type AddCommandMutationVariables = Exact<{
+  command: CommandInput;
+}>;
+
+
+export type AddCommandMutation = (
+  { __typename?: 'Mutation' }
+  & { AddCommand: (
+    { __typename?: 'Command' }
+    & Pick<Command, 'id' | 'username' | 'body' | 'type' | 'time' | 'is_executed' | 'deleted'>
+  ) }
+);
+
+export type DeleteCommandMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteCommandMutation = (
+  { __typename?: 'Mutation' }
+  & { DeleteCommand: (
+    { __typename?: 'Command' }
+    & Pick<Command, 'id' | 'body' | 'username' | 'type' | 'time' | 'is_executed' | 'deleted'>
+  ) }
+);
+
+export type GetCommandsQueryVariables = Exact<{
+  execute_statement?: Maybe<Scalars['Boolean']>;
+}>;
+
+
+export type GetCommandsQuery = (
+  { __typename?: 'Query' }
+  & { Commands: Array<(
+    { __typename?: 'Command' }
+    & Pick<Command, 'id' | 'body' | 'username' | 'type' | 'time' | 'is_executed' | 'deleted'>
+  )> }
+);
+
+export type SubscribeToNewCommandsSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeToNewCommandsSubscription = (
+  { __typename?: 'Subscription' }
+  & { newCommand: (
+    { __typename?: 'Command' }
+    & Pick<Command, 'id' | 'body' | 'username' | 'type' | 'time' | 'is_executed' | 'deleted'>
+  ) }
+);
+
+export type SubscribeToDeletedCommandSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeToDeletedCommandSubscription = (
+  { __typename?: 'Subscription' }
+  & { deletedCommand: (
+    { __typename?: 'Command' }
+    & Pick<Command, 'id' | 'body' | 'username' | 'type' | 'time' | 'is_executed' | 'deleted'>
   ) }
 );
 
@@ -432,6 +496,195 @@ export function useSubsribeToDeletedMessagesSubscription(baseOptions?: Apollo.Su
       }
 export type SubsribeToDeletedMessagesSubscriptionHookResult = ReturnType<typeof useSubsribeToDeletedMessagesSubscription>;
 export type SubsribeToDeletedMessagesSubscriptionResult = Apollo.SubscriptionResult<SubsribeToDeletedMessagesSubscription>;
+export const AddCommandDocument = gql`
+    mutation AddCommand($command: CommandInput!) {
+  AddCommand(command: $command) {
+    id
+    username
+    body
+    type
+    time
+    is_executed
+    deleted
+  }
+}
+    `;
+export type AddCommandMutationFn = Apollo.MutationFunction<AddCommandMutation, AddCommandMutationVariables>;
+
+/**
+ * __useAddCommandMutation__
+ *
+ * To run a mutation, you first call `useAddCommandMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCommandMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCommandMutation, { data, loading, error }] = useAddCommandMutation({
+ *   variables: {
+ *      command: // value for 'command'
+ *   },
+ * });
+ */
+export function useAddCommandMutation(baseOptions?: Apollo.MutationHookOptions<AddCommandMutation, AddCommandMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCommandMutation, AddCommandMutationVariables>(AddCommandDocument, options);
+      }
+export type AddCommandMutationHookResult = ReturnType<typeof useAddCommandMutation>;
+export type AddCommandMutationResult = Apollo.MutationResult<AddCommandMutation>;
+export type AddCommandMutationOptions = Apollo.BaseMutationOptions<AddCommandMutation, AddCommandMutationVariables>;
+export const DeleteCommandDocument = gql`
+    mutation DeleteCommand($id: Int!) {
+  DeleteCommand(id: $id) {
+    id
+    body
+    username
+    type
+    time
+    is_executed
+    deleted
+  }
+}
+    `;
+export type DeleteCommandMutationFn = Apollo.MutationFunction<DeleteCommandMutation, DeleteCommandMutationVariables>;
+
+/**
+ * __useDeleteCommandMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommandMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommandMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommandMutation, { data, loading, error }] = useDeleteCommandMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCommandMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommandMutation, DeleteCommandMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCommandMutation, DeleteCommandMutationVariables>(DeleteCommandDocument, options);
+      }
+export type DeleteCommandMutationHookResult = ReturnType<typeof useDeleteCommandMutation>;
+export type DeleteCommandMutationResult = Apollo.MutationResult<DeleteCommandMutation>;
+export type DeleteCommandMutationOptions = Apollo.BaseMutationOptions<DeleteCommandMutation, DeleteCommandMutationVariables>;
+export const GetCommandsDocument = gql`
+    query GetCommands($execute_statement: Boolean) {
+  Commands(execute_statement: $execute_statement) {
+    id
+    body
+    username
+    type
+    time
+    is_executed
+    deleted
+  }
+}
+    `;
+
+/**
+ * __useGetCommandsQuery__
+ *
+ * To run a query within a React component, call `useGetCommandsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommandsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommandsQuery({
+ *   variables: {
+ *      execute_statement: // value for 'execute_statement'
+ *   },
+ * });
+ */
+export function useGetCommandsQuery(baseOptions?: Apollo.QueryHookOptions<GetCommandsQuery, GetCommandsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCommandsQuery, GetCommandsQueryVariables>(GetCommandsDocument, options);
+      }
+export function useGetCommandsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommandsQuery, GetCommandsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCommandsQuery, GetCommandsQueryVariables>(GetCommandsDocument, options);
+        }
+export type GetCommandsQueryHookResult = ReturnType<typeof useGetCommandsQuery>;
+export type GetCommandsLazyQueryHookResult = ReturnType<typeof useGetCommandsLazyQuery>;
+export type GetCommandsQueryResult = Apollo.QueryResult<GetCommandsQuery, GetCommandsQueryVariables>;
+export const SubscribeToNewCommandsDocument = gql`
+    subscription SubscribeToNewCommands {
+  newCommand {
+    id
+    body
+    username
+    type
+    time
+    is_executed
+    deleted
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToNewCommandsSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToNewCommandsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToNewCommandsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToNewCommandsSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeToNewCommandsSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubscribeToNewCommandsSubscription, SubscribeToNewCommandsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToNewCommandsSubscription, SubscribeToNewCommandsSubscriptionVariables>(SubscribeToNewCommandsDocument, options);
+      }
+export type SubscribeToNewCommandsSubscriptionHookResult = ReturnType<typeof useSubscribeToNewCommandsSubscription>;
+export type SubscribeToNewCommandsSubscriptionResult = Apollo.SubscriptionResult<SubscribeToNewCommandsSubscription>;
+export const SubscribeToDeletedCommandDocument = gql`
+    subscription SubscribeToDeletedCommand {
+  deletedCommand {
+    id
+    body
+    username
+    type
+    time
+    is_executed
+    deleted
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToDeletedCommandSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToDeletedCommandSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToDeletedCommandSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToDeletedCommandSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeToDeletedCommandSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubscribeToDeletedCommandSubscription, SubscribeToDeletedCommandSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToDeletedCommandSubscription, SubscribeToDeletedCommandSubscriptionVariables>(SubscribeToDeletedCommandDocument, options);
+      }
+export type SubscribeToDeletedCommandSubscriptionHookResult = ReturnType<typeof useSubscribeToDeletedCommandSubscription>;
+export type SubscribeToDeletedCommandSubscriptionResult = Apollo.SubscriptionResult<SubscribeToDeletedCommandSubscription>;
 export const GetUsersDocument = gql`
     query GetUsers {
   Users {

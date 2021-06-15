@@ -8,18 +8,17 @@ import { isMessageValid } from "./Message/isMessageValid";
 import {
 	ChatMessagesContext,
 	ChatMesssagesProvider,
-} from "@ContextProviders/ChatMessagesProvider";
+} from "@ContextProviders/ApiProviders/ChatMessagesProvider";
 
 const styles = StyleSheet.create({
 	view: {
 		flex: 1,
 		backgroundColor: "#000",
 		display: "flex",
-		position: "relative",
 	},
 
 	chat: {
-		flex: 8,
+		flex: 1,
 		flexDirection: "column",
 	},
 

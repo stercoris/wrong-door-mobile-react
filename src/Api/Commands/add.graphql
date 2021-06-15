@@ -1,0 +1,11 @@
+mutation AddCommand($command: CommandInput!) {
+	AddCommand(command: $command) {
+		id
+		username
+		body
+		type
+		time
+		is_executed
+		deleted
+	}
+}

@@ -44,6 +44,10 @@ export const MessageInput: React.FC<MessageInputProps> = ({
 		<View style={styles.view}>
 			<TextInput
 				style={styles.input}
+				onAccessibilityAction={() => console.log("onAccessibilityAction")}
+				onAccessibilityEscape={() => console.log("onAccessibilityEscape")}
+				onAccessibilityTap={() => console.log("onAccessibilityTap")}
+				onEndEditing={() => console.log("onAccessibilityTap")}
 				placeholder={"Message"}
 				placeholderTextColor={"#555555"}
 				value={messageBody}

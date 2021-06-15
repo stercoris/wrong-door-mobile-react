@@ -1,37 +1,17 @@
 // @refresh reset
 import React, { useEffect, useState } from "react";
 import { useContext } from "react";
-import { Button } from "react-native";
-import { UserContext } from "@ContextProviders/ContextProvider";
+import { Button, View } from "react-native";
 import { Center } from "@Views/Center";
-import { ActivityIndicator } from "react-native";
 import { LoadingScreen } from "@Views/LoadingScreen/LoadingScreen";
+import { UserContext } from "@ContextProviders/ApiProviders/UserInfoProvider";
 
 interface LogInProps {}
 
-export const LogInView: React.FC<LogInProps> = () => {
-	const { user, login } = useContext(UserContext);
-	const [loading, setLoading] = useState<boolean>(false);
-
-	useEffect(() => {
-		if (user != null) {
-			setLoading(false);
-		}
-	}, [user]);
-
-	if (loading) {
-		return <LoadingScreen />;
-	}
-
+export const LogInScreen: React.FC<LogInProps> = () => {
 	return (
-		<Center>
-			<Button
-				title="LogIn"
-				onPress={() => {
-					setLoading(true);
-					login();
-				}}
-			/>
-		</Center>
+		<View style={{ backgroundColor: "black", width: "100%", height: "100%" }}>
+			<LoadingScreen />
+		</View>
 	);
 };
