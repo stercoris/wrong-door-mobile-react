@@ -11,10 +11,12 @@ import React, { useEffect, useState } from "react";
 
 export const CommandsContext = React.createContext<{
 	commands: Command[];
+	isLoaded: boolean;
 	send: (command: CommandInput) => Promise<void>;
 	delete: (commandId: number) => Promise<void>;
 }>({
 	commands: [],
+	isLoaded: false,
 	send: async () => {},
 	delete: async () => {},
 });
@@ -24,6 +26,8 @@ interface CommandsProviderProps {}
 export const CommandsProvider: React.FC<CommandsProviderProps> = ({
 	children,
 }) => {
+	const [isLoaded, setLoaded] = useState<boolean>(false);
+
 	const [sendCommand] = useAddCommandMutation();
 	const [deleteCommand] = useDeleteCommandMutation();
 
@@ -37,6 +41,7 @@ export const CommandsProvider: React.FC<CommandsProviderProps> = ({
 		const reqCommands = CommandsRequest.data?.Commands;
 		if (reqCommands) {
 			setCommands([...commands, ...reqCommands]);
+			setLoaded(true);
 		}
 	}, [CommandsRequest.loading]);
 
@@ -61,6 +66,7 @@ export const CommandsProvider: React.FC<CommandsProviderProps> = ({
 		<CommandsContext.Provider
 			value={{
 				commands,
+				isLoaded,
 				send: async (command: CommandInput) => {
 					await sendCommand({
 						variables: { command },

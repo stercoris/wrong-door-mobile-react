@@ -5,10 +5,7 @@ import { StyleSheet, View } from "react-native";
 import { MesssagesView } from "@Views/MessagesScrollView/MesssagesView";
 import { MessageInput } from "@Views/MessageInput/MessageInput";
 import { isMessageValid } from "./Message/isMessageValid";
-import {
-	ChatMessagesContext,
-	ChatMesssagesProvider,
-} from "@ContextProviders/ApiProviders/ChatMessagesProvider";
+import { ChatMessagesContext } from "@ContextProviders/ApiProviders/ChatMessagesProvider";
 
 const styles = StyleSheet.create({
 	view: {

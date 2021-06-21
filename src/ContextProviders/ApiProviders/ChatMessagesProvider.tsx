@@ -10,10 +10,12 @@ import React, { useEffect, useState } from "react";
 
 export const ChatMessagesContext = React.createContext<{
 	messages: ChatMessage[];
+	isLoaded: boolean;
 	send: (message: string, userId: number) => Promise<void>;
 	delete: (messageId: number) => Promise<void>;
 }>({
 	messages: [],
+	isLoaded: false,
 	send: async () => {},
 	delete: async () => {},
 });
@@ -23,6 +25,7 @@ interface ChatMessagesProviderProps {}
 export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 	children,
 }) => {
+	const [isLoaded, setLoaded] = useState<boolean>(false);
 	const [sendMessage] = useAddChatMessageMutation();
 	const [deleteMessage] = useDeleteChatMessageMutation();
 
@@ -36,6 +39,7 @@ export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 		const incomingMessages = Chat.data?.Messages;
 		if (incomingMessages) {
 			setMessages([...messages, ...incomingMessages]);
+			setLoaded(true);
 		}
 	}, [Chat.loading]);
 
@@ -60,6 +64,7 @@ export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 		<ChatMessagesContext.Provider
 			value={{
 				messages,
+				isLoaded,
 				send: async (message: string, userId: number) => {
 					await sendMessage({
 						variables: { message: { message: message.trim(), userId } },
