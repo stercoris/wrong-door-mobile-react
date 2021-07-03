@@ -11,6 +11,7 @@ const messageContainer = StyleSheet.create({
 		fontSize: 20,
 	},
 	messageBox: {
+		width: "fit-content",
 		borderColor: "#00FF37",
 		backgroundColor: "#333336",
 		paddingHorizontal: 8,

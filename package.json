@@ -6,11 +6,19 @@
 		"android": "expo start --android",
 		"ios": "expo start --ios",
 		"web": "expo start --web",
-		"eject": "expo eject"
+		"eject": "expo eject",
+		"test": "jest"
+	},
+	"jest": {
+		"preset": "jest-expo",
+		"transformIgnorePatterns": [
+			"node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
+		]
 	},
 	"dependencies": {
 		"@apollo/client": "^3.3.12",
 		"@expo-google-fonts/montserrat": "^0.1.0",
+		"@react-native-community/async-storage": "^1.12.1",
 		"@react-native-community/masked-view": "^0.1.10",
 		"@react-navigation/bottom-tabs": "^5.11.8",
 		"@react-navigation/native": "^5.9.3",
@@ -37,8 +45,10 @@
 		"react-native-safe-area-context": "^3.2.0",
 		"react-native-screens": "^2.18.1",
 		"react-native-scroll-into-view": "^2.0.1",
+		"react-native-storage": "^1.0.1",
 		"react-native-web": "~0.13.12",
-		"subscriptions-transport-ws": "^0.9.18"
+		"subscriptions-transport-ws": "^0.9.18",
+		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
 		"@babel/core": "~7.9.0",
@@ -46,12 +56,18 @@
 		"@graphql-codegen/typescript": "^1.21.1",
 		"@graphql-codegen/typescript-operations": "^1.18.0",
 		"@graphql-codegen/typescript-react-apollo": "^2.2.3",
+		"@types/jest": "^26.0.23",
 		"@types/react": "~16.9.35",
 		"@types/react-dom": "~16.9.8",
 		"@types/react-native": "~0.63.2",
 		"@types/react-native-dotenv": "^0.2.0",
+		"@types/react-test-renderer": "^17.0.1",
+		"@types/uuid": "^8.3.1",
 		"babel-plugin-module-resolver": "^4.1.0",
 		"babel-plugin-tsconfig-paths": "^1.0.1",
+		"jest": "^27.0.6",
+		"jest-expo": "^42.0.0",
+		"react-test-renderer": "^17.0.2",
 		"typescript": "~4.0.0"
 	}
 }

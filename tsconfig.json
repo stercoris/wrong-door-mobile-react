@@ -10,12 +10,15 @@
 		"strict": true,
 		"baseUrl": ".",
 		"paths": {
+			"*": ["src/*"],
 			"@Views/*": ["src/views/*"],
 			"@Tabs/*": ["src/Navigation/*"],
 			"@Config": ["src/Config/Config"],
 			"@ContextProviders/*": ["src/ContextProviders/*"],
 			"@Helpers/*": ["src/Helpers/*"],
-			"@Api": ["src/Api/types"]
+			"@Api": ["src/Api/types"],
+			"@Main/*": ["src/Main/*"],
+			"@ApiProvider": ["src/Api/WrongDoorApiProvider"]
 		}
 	}
 }

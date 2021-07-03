@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableHighlight } from "react-native";
-import { useDeleteChatMessageMutation } from "../../../../Api/types";
+import { useDeleteChatMessageMutation } from "../../../../../Api/types";
 import { Ionicons } from "@expo/vector-icons";
 
 interface DeleteMessageButton {

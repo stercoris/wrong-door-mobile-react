@@ -6,12 +6,13 @@ import {
 	useSubsribeToDeletedMessagesSubscription,
 	useSubsribeToNewMessagesSubscription,
 } from "@Api";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "./UserInfoProvider";
 
 export const ChatMessagesContext = React.createContext<{
 	messages: ChatMessage[];
 	isLoaded: boolean;
-	send: (message: string, userId: number) => Promise<void>;
+	send: (message: string) => Promise<void>;
 	delete: (messageId: number) => Promise<void>;
 }>({
 	messages: [],
@@ -26,8 +27,9 @@ export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 	children,
 }) => {
 	const [isLoaded, setLoaded] = useState<boolean>(false);
-	const [sendMessage] = useAddChatMessageMutation();
-	const [deleteMessage] = useDeleteChatMessageMutation();
+	const { user } = useContext(UserContext);
+	const [sendMessageQuery] = useAddChatMessageMutation();
+	const [deleteMessageQuery] = useDeleteChatMessageMutation();
 
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -35,29 +37,31 @@ export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 	const Chat = useGetChatMessagesQuery({ variables: { id: 0 } });
 	const newMessage = useSubsribeToNewMessagesSubscription();
 
+	const addMessages = (...newMessages: ChatMessage[]) => {
+		setMessages([...messages, ...newMessages]);
+		setLoaded(true);
+	};
+
+	const deleteMessage = (messageId: number) => {
+		const messagesWithDeleted = messages.filter(
+			(messageEl) => messageEl.id != messageId
+		);
+		setMessages(messagesWithDeleted);
+	};
+
 	useEffect(() => {
-		const incomingMessages = Chat.data?.Messages;
-		if (incomingMessages) {
-			setMessages([...messages, ...incomingMessages]);
-			setLoaded(true);
-		}
+		const allMessages = Chat.data?.Messages;
+		if (allMessages) addMessages(...allMessages);
 	}, [Chat.loading]);
 
-	useEffect(() => {
-		const deletedM = deletedMessage.data?.deletedMessage;
-
-		const messagesWithDeleted = messages.filter(
-			(messageEl) => messageEl.id != deletedM?.id
-		);
-
-		setMessages(messagesWithDeleted);
-	}, [deletedMessage.data?.deletedMessage]);
+	useEffect(
+		() => deleteMessage(deletedMessage.data?.deletedMessage?.id!),
+		[deletedMessage.data?.deletedMessage]
+	);
 
 	useEffect(() => {
-		const newM = newMessage.data?.newMessage;
-		if (newM) {
-			setMessages([...messages, newM]);
-		}
+		const newMessages = newMessage.data?.newMessage;
+		if (newMessages) addMessages(newMessages);
 	}, [newMessage.data?.newMessage]);
 
 	return (
@@ -65,13 +69,15 @@ export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 			value={{
 				messages,
 				isLoaded,
-				send: async (message: string, userId: number) => {
-					await sendMessage({
-						variables: { message: { message: message.trim(), userId } },
+				send: async (message: string) => {
+					await sendMessageQuery({
+						variables: {
+							message: { message: message.trim(), userId: user?.id! },
+						},
 					});
 				},
 				delete: async (messageId: number) => {
-					await deleteMessage({ variables: { id: messageId } });
+					await deleteMessageQuery({ variables: { id: messageId } });
 				},
 			}}
 		>

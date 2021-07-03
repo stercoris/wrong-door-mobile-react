@@ -38,7 +38,7 @@ export const ChatView: React.FC<ChatProps> = () => {
 			<View style={styles.input}>
 				<MessageInput
 					isMessageValid={isMessageValid}
-					sendMessage={(message: string) => sendChatMessage(message, 8)}
+					sendMessage={(message: string) => sendChatMessage(message)}
 				/>
 			</View>
 		</View>

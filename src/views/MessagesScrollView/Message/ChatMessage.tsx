@@ -13,7 +13,7 @@ import {
 } from "../../../Api/types";
 import { UserIcon } from "./UserIcon/MessageUserIcon";
 import { MessageBox } from "./TextView/MessageTextView";
-import { DeleteMessageButton } from "./MessageButtons/DeleteButton";
+import { DeleteMessageButton } from "./MessageButtons/DeleteButton/DeleteButton";
 
 interface MessageProps {
 	message: ChatMessage;
@@ -39,7 +39,13 @@ export const Message: React.FC<MessageProps> = ({
 				marginVertical: !isUserProfileShown ? 5 : 10,
 			}}
 		>
-			<View style={{ flex: 10, marginRight: 30 }}>
+			<View
+				style={{
+					flex: 10,
+					marginRight: isSelfMessage ? 30 : 0,
+					flexDirection: isSelfMessage ? "row" : "row-reverse",
+				}}
+			>
 				<MessageBox message={message} />
 			</View>
 
