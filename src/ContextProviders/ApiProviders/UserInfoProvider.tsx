@@ -1,4 +1,4 @@
-import { useGetUsersQuery, User } from "@Api";
+import { useCreateUserMutation, useGetUsersQuery, User } from "@Api";
 import { getUserIdAndCreateIfNotExist } from "@Helpers/getDeviceId";
 import React, { useEffect, useState } from "react";
 
@@ -23,25 +23,25 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
 	const [user, setUser] = useState<UserInfo>(null);
 	const [isLoaded, setLoaded] = useState<boolean>(false);
 	const [deviceId, setDeviceId] = useState<string>();
+	const [createUser] = useCreateUserMutation();
 
 	if (!deviceId) getUserIdAndCreateIfNotExist().then(setDeviceId);
 
 	const createCLI = () => {
-		Object.defineProperty(window, "setUserId", {
-			value: (userId: number) => {
-				const users = data?.Users;
-				if (users && deviceId) {
-					const thisUser = users.find((user) => user.id === userId)!;
-					setUser(thisUser);
-					console.table(thisUser);
-				}
-			},
-		});
-
-		Object.defineProperty(window, "displayAllUsers", {
-			value: () => {
-				const users = data?.Users;
-				console.table(users);
+		Object.defineProperty(window, "user", {
+			value: {
+				setUser: (userId: number) => {
+					const users = data?.Users;
+					if (users && deviceId) {
+						const thisUser = users.find((user) => user.id === userId)!;
+						setUser(thisUser);
+						console.table(thisUser);
+					}
+				},
+				getUsers: () => {
+					const users = data?.Users;
+					console.table(users);
+				},
 			},
 		});
 	};
@@ -50,9 +50,21 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
 		const users = data?.Users;
 		if (users && deviceId) {
 			const thisUser = users.find((user) => user.deviceid == deviceId)!;
-			console.log(thisUser);
-			setUser(thisUser);
-			setLoaded(true);
+
+			if (!thisUser) {
+				(async () => {
+					const userRequest = await createUser({
+						variables: { user: { deviceid: deviceId, username: "New User" } },
+					});
+					const newUser = userRequest.data?.CreateUser!;
+					setUser(newUser);
+					setLoaded(true);
+				})();
+			} else {
+				setUser(thisUser);
+				setLoaded(true);
+			}
+
 			createCLI();
 		}
 	}, [loading, deviceId]);

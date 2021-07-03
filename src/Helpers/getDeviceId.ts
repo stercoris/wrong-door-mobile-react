@@ -9,7 +9,7 @@ const userStorage = new Storage({
 	enableCache: true,
 });
 
-const getLocalUserUUID = async (): Promise<string | null> => {
+export const getLocalUserUUID = async (): Promise<string | null> => {
 	try {
 		const token = await userStorage.load({
 			key: "token",

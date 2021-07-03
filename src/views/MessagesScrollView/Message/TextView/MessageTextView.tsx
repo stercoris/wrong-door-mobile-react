@@ -1,11 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
-import {
-	ChatMessage,
-	useDeleteChatMessageMutation,
-} from "../../../../Api/types";
+import { StyleSheet, Text, View } from "react-native";
+import { WDDateTimeLabel } from "@Views/WDComponents/WDDateTimeLabel/WDDateTimeLabel";
 
-const messageContainer = StyleSheet.create({
+const s = StyleSheet.create({
 	messageText: {
 		color: "#fff",
 		fontSize: 20,
@@ -22,25 +19,21 @@ const messageContainer = StyleSheet.create({
 });
 
 interface MessageBoxProps {
-	message: ChatMessage;
+	message: {
+		id: number;
+		message: string;
+		time: any;
+	};
 }
 
-export const MessageBox: React.FC<MessageBoxProps> = ({ message }) => {
+export const MessageBox: React.FC<MessageBoxProps> = ({
+	message: { time, message, id },
+}) => {
 	return (
-		<View style={messageContainer.messageBox}>
-			<Text
-				style={{
-					fontSize: 8,
-					color: "#fff",
-				}}
-				selectable={true}
-			>
-				{new Date(message.time).toLocaleTimeString()}{" "}
-				{new Date(message.time).toDateString()}
-				{"  "}ID:{message.id}
-			</Text>
-			<Text style={messageContainer.messageText} selectable={true}>
-				{message.message}
+		<View style={s.messageBox}>
+			<WDDateTimeLabel date={time} postfix={`ID:${id}`} />
+			<Text style={s.messageText} selectable={true}>
+				{message}
 			</Text>
 		</View>
 	);

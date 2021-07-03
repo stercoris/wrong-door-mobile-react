@@ -1,19 +1,25 @@
-import React from "react";
-import {
-	Image,
-	StyleSheet,
-	Text,
-	TouchableHighlight,
-	View,
-} from "react-native";
-import {
-	ChatMessage,
-	useDeleteChatMessageMutation,
-	User,
-} from "../../../Api/types";
-import { UserIcon } from "./UserIcon/MessageUserIcon";
+import React, { useContext } from "react";
+import { StyleSheet, View } from "react-native";
+import { ChatMessage, User } from "@Api";
 import { MessageBox } from "./TextView/MessageTextView";
-import { DeleteMessageButton } from "./MessageButtons/DeleteButton/DeleteButton";
+import { WDIcon } from "@Views/WDComponents/WDIcon/WDIcon";
+import { UserContext } from "@ContextProviders/ApiProviders/UserInfoProvider";
+
+const s = StyleSheet.create({
+	container: {
+		alignItems: "center",
+		display: "flex",
+	},
+	message: {
+		flex: 10,
+	},
+	userIcon: {
+		height: "100%",
+		flexDirection: "column-reverse",
+		display: "flex",
+		alignItems: "center",
+	},
+});
 
 interface MessageProps {
 	message: ChatMessage;
@@ -28,37 +34,37 @@ export const Message: React.FC<MessageProps> = ({
 	isSelfMessage = false,
 	isUserProfileShown = false,
 }) => {
-	if (user.id === 8) isSelfMessage = true;
-
 	return (
 		<View
-			style={{
-				flexDirection: isSelfMessage ? "row-reverse" : "row",
-				alignItems: "center",
-				display: "flex",
-				marginVertical: !isUserProfileShown ? 5 : 10,
-			}}
+			style={[
+				s.container,
+				{
+					flexDirection: isSelfMessage ? "row-reverse" : "row",
+					marginVertical: !isUserProfileShown ? 5 : 10,
+				},
+			]}
 		>
 			<View
-				style={{
-					flex: 10,
-					marginRight: isSelfMessage ? 30 : 0,
-					flexDirection: isSelfMessage ? "row" : "row-reverse",
-				}}
+				style={[
+					s.message,
+					{
+						marginRight: isSelfMessage ? 30 : 0,
+						flexDirection: isSelfMessage ? "row" : "row-reverse",
+					},
+				]}
 			>
 				<MessageBox message={message} />
 			</View>
 
 			<View
-				style={{
-					flex: !isUserProfileShown ? 1 : 3,
-					height: "100%",
-					flexDirection: "column-reverse",
-					display: "flex",
-					alignItems: "center",
-				}}
+				style={[
+					s.userIcon,
+					{
+						flex: !isUserProfileShown ? 1 : 3,
+					},
+				]}
 			>
-				{isUserProfileShown && <UserIcon user={user} />}
+				{isUserProfileShown && <WDIcon image={user.image!} />}
 			</View>
 		</View>
 	);

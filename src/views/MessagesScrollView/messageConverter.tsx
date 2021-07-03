@@ -1,3 +1,4 @@
+import { getLocalUserUUID } from "@Helpers/getDeviceId";
 import React from "react";
 import { ChatMessage, User } from "../../Api/types";
 import { Message } from "./Message/ChatMessage";
@@ -12,6 +13,7 @@ export interface Message {
 
 export function convertMessages(
 	users: User[],
+	userId: number,
 	...messages: Message[]
 ): JSX.Element[] {
 	return messages.map((message, i, allMessages) => {
@@ -32,6 +34,7 @@ export function convertMessages(
 					user={user}
 					isUserProfileShown={isStacked}
 					key={message.id}
+					isSelfMessage={user.id === userId}
 				/>
 			);
 		}

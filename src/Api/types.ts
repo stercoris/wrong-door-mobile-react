@@ -16,6 +16,14 @@ export type Scalars = {
   DateTime: any;
 };
 
+/** level of user access */
+export enum AccessLevel {
+  Denied = 'Denied',
+  User = 'User',
+  Pro = 'Pro',
+  Admin = 'Admin'
+}
+
 export type ChatMessage = {
   __typename?: 'ChatMessage';
   id: Scalars['Int'];
@@ -168,7 +176,7 @@ export type User = {
   id: Scalars['Int'];
   deviceid: Scalars['String'];
   username: Scalars['String'];
-  access_level: Scalars['Int'];
+  access_level: AccessLevel;
   last_online_time: Scalars['DateTime'];
   image?: Maybe<Scalars['String']>;
 };
@@ -303,6 +311,19 @@ export type SubscribeToDeletedCommandSubscription = (
   & { deletedCommand: (
     { __typename?: 'Command' }
     & Pick<Command, 'id' | 'body' | 'username' | 'type' | 'time' | 'is_executed' | 'deleted'>
+  ) }
+);
+
+export type CreateUserMutationVariables = Exact<{
+  user: UserInput;
+}>;
+
+
+export type CreateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { CreateUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'deviceid' | 'username' | 'access_level' | 'last_online_time' | 'image'>
   ) }
 );
 
@@ -685,6 +706,44 @@ export function useSubscribeToDeletedCommandSubscription(baseOptions?: Apollo.Su
       }
 export type SubscribeToDeletedCommandSubscriptionHookResult = ReturnType<typeof useSubscribeToDeletedCommandSubscription>;
 export type SubscribeToDeletedCommandSubscriptionResult = Apollo.SubscriptionResult<SubscribeToDeletedCommandSubscription>;
+export const CreateUserDocument = gql`
+    mutation CreateUser($user: UserInput!) {
+  CreateUser(User: $user) {
+    id
+    deviceid
+    username
+    access_level
+    last_online_time
+    image
+  }
+}
+    `;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   Users {

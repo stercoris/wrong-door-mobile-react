@@ -1,6 +1,5 @@
-import React, { useReducer, useRef, useState } from "react";
+import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { User } from "@Api";
 
 const profile = StyleSheet.create({
 	profileBox: {
@@ -16,20 +15,19 @@ const profile = StyleSheet.create({
 
 	image: {
 		borderRadius: 50,
-		resizeMode: "stretch",
 		width: "100%",
 		height: "100%",
 	},
 });
 
-interface UserIconProps {
-	user: User;
+interface WDIconProps {
+	image: string;
 }
 
-export const UserIcon: React.FC<UserIconProps> = ({ user }) => (
+export const WDIcon: React.FC<WDIconProps> = ({ image }) => (
 	<View style={profile.profileBox}>
 		<View style={profile.imageWrapper}>
-			<Image source={{ uri: user.image! }} style={profile.image} />
+			<Image source={{ uri: image }} style={profile.image} />
 		</View>
 	</View>
 );
