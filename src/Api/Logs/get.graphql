@@ -1,0 +1,10 @@
+query GetLogMessages($id: Int!) {
+	Logs(id: $id) {
+		id
+		commandId
+		username
+		message
+		deleted
+		time
+	}
+}

@@ -27,11 +27,12 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
 
 	if (!deviceId) getUserIdAndCreateIfNotExist().then(setDeviceId);
 
+	const users = data?.Users;
+
 	const createCLI = () => {
 		Object.defineProperty(window, "user", {
 			value: {
 				setUser: (userId: number) => {
-					const users = data?.Users;
 					if (users && deviceId) {
 						const thisUser = users.find((user) => user.id === userId)!;
 						setUser(thisUser);
@@ -39,7 +40,6 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
 					}
 				},
 				getUsers: () => {
-					const users = data?.Users;
 					console.table(users);
 				},
 			},
@@ -47,7 +47,6 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
 	};
 
 	useEffect(() => {
-		const users = data?.Users;
 		if (users && deviceId) {
 			const thisUser = users.find((user) => user.deviceid == deviceId)!;
 

@@ -21,3 +21,10 @@ subscription SubscribeToDeletedCommand {
 		deleted
 	}
 }
+
+subscription SubscribeToCommandExecution {
+	newLogMessage {
+		id
+		commandId
+	}
+}

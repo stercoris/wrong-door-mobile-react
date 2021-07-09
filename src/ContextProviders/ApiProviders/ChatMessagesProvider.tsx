@@ -6,81 +6,65 @@ import {
 	useSubsribeToDeletedMessagesSubscription,
 	useSubsribeToNewMessagesSubscription,
 } from "@Api";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
+import ConnectEntityToGraphql from "./common/baseReactiveContext";
 import { UserContext } from "./UserInfoProvider";
 
-export const ChatMessagesContext = React.createContext<{
+interface ChatMessagesContextType {
 	messages: ChatMessage[];
 	isLoaded: boolean;
 	send: (message: string) => Promise<void>;
 	delete: (messageId: number) => Promise<void>;
-}>({
+}
+
+const ChatMessagesContextFirstState: ChatMessagesContextType = {
 	messages: [],
 	isLoaded: false,
 	send: async () => {},
 	delete: async () => {},
-});
+};
+
+export const ChatMessagesContext = React.createContext<ChatMessagesContextType>(
+	ChatMessagesContextFirstState
+);
 
 interface ChatMessagesProviderProps {}
 
 export const ChatMesssagesProvider: React.FC<ChatMessagesProviderProps> = ({
 	children,
 }) => {
-	const [isLoaded, setLoaded] = useState<boolean>(false);
+	const { data: all } = useGetChatMessagesQuery({ variables: { id: 0 } });
+	const { data: subscibeNew } = useSubsribeToNewMessagesSubscription();
+	const { data: subscribeDelete } = useSubsribeToDeletedMessagesSubscription();
+
+	const { entities: messages, isLoaded } = ConnectEntityToGraphql({
+		allEntities: all?.Messages,
+		deletedIncomingEntity: subscribeDelete?.deletedMessage,
+		newIncomingEntity: subscibeNew?.newMessage,
+	});
+
 	const { user } = useContext(UserContext);
-	const [sendMessageQuery] = useAddChatMessageMutation();
-	const [deleteMessageQuery] = useDeleteChatMessageMutation();
-
-	const [messages, setMessages] = useState<ChatMessage[]>([]);
-
-	const deletedMessage = useSubsribeToDeletedMessagesSubscription();
-	const Chat = useGetChatMessagesQuery({ variables: { id: 0 } });
-	const newMessage = useSubsribeToNewMessagesSubscription();
-
-	const addMessages = (...newMessages: ChatMessage[]) => {
-		setMessages([...messages, ...newMessages]);
-		setLoaded(true);
+	const [sendMessageRawMutation] = useAddChatMessageMutation();
+	const sendMutation = async (message: string) => {
+		await sendMessageRawMutation({
+			variables: { message: { message: message.trim(), userId: user?.id! } },
+		});
 	};
 
-	const deleteMessage = (messageId: number) => {
-		const messagesWithDeleted = messages.filter(
-			(messageEl) => messageEl.id != messageId
-		);
-		setMessages(messagesWithDeleted);
+	const [deleteMessageRawMutation] = useDeleteChatMessageMutation();
+	const deleteMutation = async (messageId: number) => {
+		await deleteMessageRawMutation({ variables: { id: messageId } });
 	};
 
-	useEffect(() => {
-		const allMessages = Chat.data?.Messages;
-		if (allMessages) addMessages(...allMessages);
-	}, [Chat.loading]);
-
-	useEffect(
-		() => deleteMessage(deletedMessage.data?.deletedMessage?.id!),
-		[deletedMessage.data?.deletedMessage]
-	);
-
-	useEffect(() => {
-		const newMessages = newMessage.data?.newMessage;
-		if (newMessages) addMessages(newMessages);
-	}, [newMessage.data?.newMessage]);
+	const context: ChatMessagesContextType = {
+		messages,
+		isLoaded,
+		send: sendMutation,
+		delete: deleteMutation,
+	};
 
 	return (
-		<ChatMessagesContext.Provider
-			value={{
-				messages,
-				isLoaded,
-				send: async (message: string) => {
-					await sendMessageQuery({
-						variables: {
-							message: { message: message.trim(), userId: user?.id! },
-						},
-					});
-				},
-				delete: async (messageId: number) => {
-					await deleteMessageQuery({ variables: { id: messageId } });
-				},
-			}}
-		>
+		<ChatMessagesContext.Provider value={context}>
 			{children}
 		</ChatMessagesContext.Provider>
 	);

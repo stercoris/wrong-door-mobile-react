@@ -1,5 +1,4 @@
 // @refresh reset
-import { __EnumValue } from "graphql";
 import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { MesssagesView } from "@Views/MessagesScrollView/MesssagesView";

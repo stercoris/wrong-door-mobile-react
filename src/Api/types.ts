@@ -71,6 +71,7 @@ export type LogsMessage = {
   command?: Maybe<Command>;
   username: Scalars['String'];
   message: Scalars['String'];
+  deleted: Scalars['Boolean'];
   time: Scalars['DateTime'];
 };
 
@@ -87,7 +88,7 @@ export type Mutation = {
   AddCommand: Command;
   DeleteCommand: Command;
   AddLog: LogsMessage;
-  DeleteLog: Scalars['Boolean'];
+  DeleteLog: LogsMessage;
   UpdateUser: User;
   CreateUser: User;
   DeleteUser: Scalars['Boolean'];
@@ -169,6 +170,8 @@ export type Subscription = {
   deletedMessage: ChatMessage;
   newCommand: Command;
   deletedCommand: Command;
+  newLogMessage: LogsMessage;
+  deletedLogMessage: LogsMessage;
 };
 
 export type User = {
@@ -311,6 +314,78 @@ export type SubscribeToDeletedCommandSubscription = (
   & { deletedCommand: (
     { __typename?: 'Command' }
     & Pick<Command, 'id' | 'body' | 'username' | 'type' | 'time' | 'is_executed' | 'deleted'>
+  ) }
+);
+
+export type SubscribeToCommandExecutionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeToCommandExecutionSubscription = (
+  { __typename?: 'Subscription' }
+  & { newLogMessage: (
+    { __typename?: 'LogsMessage' }
+    & Pick<LogsMessage, 'id' | 'commandId'>
+  ) }
+);
+
+export type AddLogMessageMutationVariables = Exact<{
+  log: LogsMessageInput;
+}>;
+
+
+export type AddLogMessageMutation = (
+  { __typename?: 'Mutation' }
+  & { AddLog: (
+    { __typename?: 'LogsMessage' }
+    & Pick<LogsMessage, 'id' | 'commandId' | 'username' | 'message' | 'time'>
+  ) }
+);
+
+export type DeleteLogMessageMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteLogMessageMutation = (
+  { __typename?: 'Mutation' }
+  & { DeleteLog: (
+    { __typename?: 'LogsMessage' }
+    & Pick<LogsMessage, 'id' | 'commandId' | 'username' | 'message' | 'deleted' | 'time'>
+  ) }
+);
+
+export type GetLogMessagesQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetLogMessagesQuery = (
+  { __typename?: 'Query' }
+  & { Logs: Array<(
+    { __typename?: 'LogsMessage' }
+    & Pick<LogsMessage, 'id' | 'commandId' | 'username' | 'message' | 'deleted' | 'time'>
+  )> }
+);
+
+export type SubscribeToNewLogMessagesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeToNewLogMessagesSubscription = (
+  { __typename?: 'Subscription' }
+  & { newLogMessage: (
+    { __typename?: 'LogsMessage' }
+    & Pick<LogsMessage, 'id' | 'username' | 'message' | 'deleted' | 'time' | 'commandId'>
+  ) }
+);
+
+export type SubscribeToDeletedLogMessagesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeToDeletedLogMessagesSubscription = (
+  { __typename?: 'Subscription' }
+  & { deletedLogMessage: (
+    { __typename?: 'LogsMessage' }
+    & Pick<LogsMessage, 'id' | 'commandId' | 'username' | 'message' | 'deleted' | 'time'>
   ) }
 );
 
@@ -706,6 +781,220 @@ export function useSubscribeToDeletedCommandSubscription(baseOptions?: Apollo.Su
       }
 export type SubscribeToDeletedCommandSubscriptionHookResult = ReturnType<typeof useSubscribeToDeletedCommandSubscription>;
 export type SubscribeToDeletedCommandSubscriptionResult = Apollo.SubscriptionResult<SubscribeToDeletedCommandSubscription>;
+export const SubscribeToCommandExecutionDocument = gql`
+    subscription SubscribeToCommandExecution {
+  newLogMessage {
+    id
+    commandId
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToCommandExecutionSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToCommandExecutionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToCommandExecutionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToCommandExecutionSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeToCommandExecutionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubscribeToCommandExecutionSubscription, SubscribeToCommandExecutionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToCommandExecutionSubscription, SubscribeToCommandExecutionSubscriptionVariables>(SubscribeToCommandExecutionDocument, options);
+      }
+export type SubscribeToCommandExecutionSubscriptionHookResult = ReturnType<typeof useSubscribeToCommandExecutionSubscription>;
+export type SubscribeToCommandExecutionSubscriptionResult = Apollo.SubscriptionResult<SubscribeToCommandExecutionSubscription>;
+export const AddLogMessageDocument = gql`
+    mutation AddLogMessage($log: LogsMessageInput!) {
+  AddLog(log: $log) {
+    id
+    commandId
+    username
+    message
+    time
+  }
+}
+    `;
+export type AddLogMessageMutationFn = Apollo.MutationFunction<AddLogMessageMutation, AddLogMessageMutationVariables>;
+
+/**
+ * __useAddLogMessageMutation__
+ *
+ * To run a mutation, you first call `useAddLogMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLogMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLogMessageMutation, { data, loading, error }] = useAddLogMessageMutation({
+ *   variables: {
+ *      log: // value for 'log'
+ *   },
+ * });
+ */
+export function useAddLogMessageMutation(baseOptions?: Apollo.MutationHookOptions<AddLogMessageMutation, AddLogMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddLogMessageMutation, AddLogMessageMutationVariables>(AddLogMessageDocument, options);
+      }
+export type AddLogMessageMutationHookResult = ReturnType<typeof useAddLogMessageMutation>;
+export type AddLogMessageMutationResult = Apollo.MutationResult<AddLogMessageMutation>;
+export type AddLogMessageMutationOptions = Apollo.BaseMutationOptions<AddLogMessageMutation, AddLogMessageMutationVariables>;
+export const DeleteLogMessageDocument = gql`
+    mutation DeleteLogMessage($id: Int!) {
+  DeleteLog(id: $id) {
+    id
+    commandId
+    username
+    username
+    message
+    deleted
+    time
+  }
+}
+    `;
+export type DeleteLogMessageMutationFn = Apollo.MutationFunction<DeleteLogMessageMutation, DeleteLogMessageMutationVariables>;
+
+/**
+ * __useDeleteLogMessageMutation__
+ *
+ * To run a mutation, you first call `useDeleteLogMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteLogMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteLogMessageMutation, { data, loading, error }] = useDeleteLogMessageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteLogMessageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteLogMessageMutation, DeleteLogMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteLogMessageMutation, DeleteLogMessageMutationVariables>(DeleteLogMessageDocument, options);
+      }
+export type DeleteLogMessageMutationHookResult = ReturnType<typeof useDeleteLogMessageMutation>;
+export type DeleteLogMessageMutationResult = Apollo.MutationResult<DeleteLogMessageMutation>;
+export type DeleteLogMessageMutationOptions = Apollo.BaseMutationOptions<DeleteLogMessageMutation, DeleteLogMessageMutationVariables>;
+export const GetLogMessagesDocument = gql`
+    query GetLogMessages($id: Int!) {
+  Logs(id: $id) {
+    id
+    commandId
+    username
+    message
+    deleted
+    time
+  }
+}
+    `;
+
+/**
+ * __useGetLogMessagesQuery__
+ *
+ * To run a query within a React component, call `useGetLogMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLogMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLogMessagesQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetLogMessagesQuery(baseOptions: Apollo.QueryHookOptions<GetLogMessagesQuery, GetLogMessagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLogMessagesQuery, GetLogMessagesQueryVariables>(GetLogMessagesDocument, options);
+      }
+export function useGetLogMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLogMessagesQuery, GetLogMessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLogMessagesQuery, GetLogMessagesQueryVariables>(GetLogMessagesDocument, options);
+        }
+export type GetLogMessagesQueryHookResult = ReturnType<typeof useGetLogMessagesQuery>;
+export type GetLogMessagesLazyQueryHookResult = ReturnType<typeof useGetLogMessagesLazyQuery>;
+export type GetLogMessagesQueryResult = Apollo.QueryResult<GetLogMessagesQuery, GetLogMessagesQueryVariables>;
+export const SubscribeToNewLogMessagesDocument = gql`
+    subscription SubscribeToNewLogMessages {
+  newLogMessage {
+    id
+    username
+    message
+    deleted
+    time
+    commandId
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToNewLogMessagesSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToNewLogMessagesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToNewLogMessagesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToNewLogMessagesSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeToNewLogMessagesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubscribeToNewLogMessagesSubscription, SubscribeToNewLogMessagesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToNewLogMessagesSubscription, SubscribeToNewLogMessagesSubscriptionVariables>(SubscribeToNewLogMessagesDocument, options);
+      }
+export type SubscribeToNewLogMessagesSubscriptionHookResult = ReturnType<typeof useSubscribeToNewLogMessagesSubscription>;
+export type SubscribeToNewLogMessagesSubscriptionResult = Apollo.SubscriptionResult<SubscribeToNewLogMessagesSubscription>;
+export const SubscribeToDeletedLogMessagesDocument = gql`
+    subscription SubscribeToDeletedLogMessages {
+  deletedLogMessage {
+    id
+    commandId
+    username
+    message
+    deleted
+    time
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToDeletedLogMessagesSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToDeletedLogMessagesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToDeletedLogMessagesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToDeletedLogMessagesSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeToDeletedLogMessagesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubscribeToDeletedLogMessagesSubscription, SubscribeToDeletedLogMessagesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToDeletedLogMessagesSubscription, SubscribeToDeletedLogMessagesSubscriptionVariables>(SubscribeToDeletedLogMessagesDocument, options);
+      }
+export type SubscribeToDeletedLogMessagesSubscriptionHookResult = ReturnType<typeof useSubscribeToDeletedLogMessagesSubscription>;
+export type SubscribeToDeletedLogMessagesSubscriptionResult = Apollo.SubscriptionResult<SubscribeToDeletedLogMessagesSubscription>;
 export const CreateUserDocument = gql`
     mutation CreateUser($user: UserInput!) {
   CreateUser(User: $user) {

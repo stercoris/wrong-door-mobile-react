@@ -1,0 +1,11 @@
+mutation DeleteLogMessage($id: Int!) {
+	DeleteLog(id: $id) {
+		id
+		commandId
+		username
+		username
+		message
+		deleted
+		time
+	}
+}

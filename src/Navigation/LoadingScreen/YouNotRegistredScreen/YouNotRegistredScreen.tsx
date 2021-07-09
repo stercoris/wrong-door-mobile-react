@@ -7,7 +7,7 @@ interface YouNotRegistredProps {}
 export const YouNotRegistredScreen: React.FC<YouNotRegistredProps> = () => {
 	return (
 		<Center>
-			<Text style={{ color: "white" }}>Запроси доступ пидор</Text>
+			<Text style={{ color: "white" }}>Запроси доступ</Text>
 		</Center>
 	);
 };

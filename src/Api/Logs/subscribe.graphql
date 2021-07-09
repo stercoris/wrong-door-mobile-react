@@ -1,0 +1,21 @@
+subscription SubscribeToNewLogMessages {
+	newLogMessage {
+		id
+		username
+		message
+		deleted
+		time
+		commandId
+	}
+}
+
+subscription SubscribeToDeletedLogMessages {
+	deletedLogMessage {
+		id
+		commandId
+		username
+		message
+		deleted
+		time
+	}
+}

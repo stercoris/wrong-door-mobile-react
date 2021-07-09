@@ -8,75 +8,60 @@ import {
 	useSubscribeToNewCommandsSubscription,
 } from "@Api";
 import React, { useEffect, useState } from "react";
+import ConnectEntityToGraphql from "./common/baseReactiveContext";
 
-export const CommandsContext = React.createContext<{
+interface CommandsContextType {
 	commands: Command[];
 	isLoaded: boolean;
 	send: (command: CommandInput) => Promise<void>;
 	delete: (commandId: number) => Promise<void>;
-}>({
+}
+
+const CommandsContextDefaultState: CommandsContextType = {
 	commands: [],
 	isLoaded: false,
 	send: async () => {},
 	delete: async () => {},
-});
+};
+
+export const CommandsContext = React.createContext<CommandsContextType>(
+	CommandsContextDefaultState
+);
 
 interface CommandsProviderProps {}
 
 export const CommandsProvider: React.FC<CommandsProviderProps> = ({
 	children,
 }) => {
-	const [isLoaded, setLoaded] = useState<boolean>(false);
+	const { data: all } = useGetCommandsQuery();
+	const { data: subscribeNew } = useSubscribeToDeletedCommandSubscription();
+	const { data: subscribeDelete } = useSubscribeToNewCommandsSubscription();
 
-	const [sendCommand] = useAddCommandMutation();
-	const [deleteCommand] = useDeleteCommandMutation();
+	const { entities: commands, isLoaded } = ConnectEntityToGraphql({
+		allEntities: all?.Commands,
+		deletedIncomingEntity: subscribeNew?.deletedCommand,
+		newIncomingEntity: subscribeDelete?.newCommand,
+	});
 
-	const [commands, setCommands] = useState<Command[]>([]);
+	const [sendCommandRawMutation] = useAddCommandMutation();
+	const sendMutation = async (command: CommandInput) => {
+		await sendCommandRawMutation({ variables: { command } });
+	};
 
-	const CommandsRequest = useGetCommandsQuery();
-	const deletedCommand = useSubscribeToDeletedCommandSubscription();
-	const newCommands = useSubscribeToNewCommandsSubscription();
+	const [deleteCommandRawMutation] = useDeleteCommandMutation();
+	const deleteMutation = async (commandId: number) => {
+		await deleteCommandRawMutation({ variables: { id: commandId } });
+	};
 
-	useEffect(() => {
-		const reqCommands = CommandsRequest.data?.Commands;
-		if (reqCommands) {
-			setCommands([...commands, ...reqCommands]);
-			setLoaded(true);
-		}
-	}, [CommandsRequest.loading]);
-
-	useEffect(() => {
-		const deletedM = deletedCommand.data?.deletedCommand;
-
-		const messagesWithDeleted = commands.filter(
-			(messageEl) => messageEl.id != deletedM?.id
-		);
-
-		setCommands(messagesWithDeleted);
-	}, [deletedCommand.data?.deletedCommand]);
-
-	useEffect(() => {
-		const newM = newCommands.data?.newCommand;
-		if (newM) {
-			setCommands([...commands, newM]);
-		}
-	}, [newCommands.data?.newCommand]);
+	const context: CommandsContextType = {
+		commands,
+		isLoaded,
+		send: sendMutation,
+		delete: deleteMutation,
+	};
 
 	return (
-		<CommandsContext.Provider
-			value={{
-				commands,
-				isLoaded,
-				send: async (command: CommandInput) => {
-					await sendCommand({
-						variables: { command },
-					});
-				},
-				delete: async (commandId: number) => {
-					await deleteCommand({ variables: { id: commandId } });
-				},
-			}}
-		>
+		<CommandsContext.Provider value={context}>
 			{children}
 		</CommandsContext.Provider>
 	);

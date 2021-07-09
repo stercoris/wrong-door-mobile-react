@@ -18,13 +18,11 @@ export const LoadingScreen: React.FC<LoadingProps> = ({ children }) => {
 	const isAllLoaded = isUsersLoaded && isChatLoaded && isCommandsLoaded;
 
 	const isHavePersmission = (al: AccessLevel) =>
-		![AccessLevel.Denied].includes(al) && al;
+		![AccessLevel.Denied].includes(al);
 
 	if (!isAllLoaded) {
 		return <LoadingIndicator />;
 	}
-	console.log(user?.access_level!);
-	console.log(isHavePersmission(user?.access_level!));
 
 	if (isHavePersmission(user?.access_level!)) {
 		return <>{children}</>;
