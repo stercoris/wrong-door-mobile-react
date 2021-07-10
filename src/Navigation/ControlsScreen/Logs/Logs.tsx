@@ -33,9 +33,10 @@ export const LogsView: React.FC<ChatProps> = () => {
 
 	// TODO: REWRITE ALL MESSAGES VIEW TO BE COMPATIBLE WITH THIS SHIT
 	const { user } = useContext(UserContext);
-	const kostyl = logMessages.map((lm) =>
-		Object.assign({ userId: user?.id! }, lm)
-	);
+
+	const userId = user?.id!;
+
+	const kostyl = logMessages.map((lm) => Object.assign({ userId }, lm));
 
 	return (
 		<View style={styles.view}>

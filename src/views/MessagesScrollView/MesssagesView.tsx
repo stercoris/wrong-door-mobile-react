@@ -11,17 +11,14 @@ interface MessagesViewProps {
 
 export const MesssagesView: React.FC<MessagesViewProps> = ({ messages }) => {
 	const Users = useGetUsersQuery();
-	const scrollView = useRef<ScrollView>(null);
+	const refScrollView = useRef<ScrollView>(null);
 	const { user } = useContext(UserContext);
 
-	useEffect(() => {
-		if (scrollView) {
-			scrollView.current?.scrollToEnd({ animated: false });
-		}
-	}, [messages]);
+	const { current: scrollView } = refScrollView;
+	useEffect(() => scrollView?.scrollToEnd({ animated: false }), [messages]);
 
 	return (
-		<ScrollView ref={scrollView}>
+		<ScrollView ref={refScrollView}>
 			{convertMessages(Users.data?.Users!, user?.id!, ...messages)}
 		</ScrollView>
 	);
