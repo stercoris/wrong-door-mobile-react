@@ -1,12 +1,13 @@
 import { ChatMessage, User } from "@Api";
+import { convertDateTimeToCoolString } from "@Helpers/dateTimeConverter";
 import { WDIcon } from "@Views/WDComponents/WDIcon/WDIcon";
 import { WDTextBubble } from "@Views/WDComponents/WDTextBubble/WDTextBubble";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import Images from "@Images";
 
 const s = StyleSheet.create({
 	container: {
-		alignItems: "center",
 		display: "flex",
 	},
 	message: {
@@ -26,6 +27,10 @@ export const ChatMessageView: React.FC<ChatMessageViewProps> = ({
 	user,
 	message,
 }) => {
+	const userIsRepresentedButWithoudImage = user && user.image === null;
+	const image = userIsRepresentedButWithoudImage
+		? Images.UserDefaultImage
+		: user?.image;
 	return (
 		<View
 			style={[
@@ -36,14 +41,19 @@ export const ChatMessageView: React.FC<ChatMessageViewProps> = ({
 				},
 			]}
 		>
-			{user?.image && <WDIcon image={user.image} />}
+			{image && <WDIcon image={image} />}
 			<View
 				style={[
 					s.message,
 					{ flexDirection: isSelfMessage ? "row" : "row-reverse" },
 				]}
 			>
-				<WDTextBubble body={message.message} upper={message.time} />
+				<WDTextBubble
+					body={message.message}
+					upper={
+						convertDateTimeToCoolString(message.time) + ` ID:${message.id}`
+					}
+				/>
 			</View>
 		</View>
 	);

@@ -5,7 +5,7 @@ import {
 } from "@ContextProviders/ApiProviders/UserInfoProvider";
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { ChatMessageView, ChatMessageViewProps } from "./chatMessage";
+import { ChatMessageView, ChatMessageViewProps } from "./Message/chatMessage";
 
 const s = StyleSheet.create({});
 

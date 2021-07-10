@@ -12,6 +12,8 @@ module.exports = function (api) {
 						"@Views": "./src/views",
 						"@Tabs": "./src/Navigation",
 						"@Config": "./src/Config/Config",
+						"@img": "./src/Images",
+						"@Images": "./src/Config/Images",
 						"@ContextProviders": "./src/ContextProviders",
 						"@Helpers": "./src/Helpers",
 						"@Api": "./src/Api/types",
