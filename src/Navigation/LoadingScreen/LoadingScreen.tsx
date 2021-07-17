@@ -1,7 +1,7 @@
 // @refresh reset
 import React, { ReactElement, useContext } from "react";
 import { View } from "react-native";
-import { LoadingIndicator } from "@Views/LoadingIndicator/LoadingScreen";
+import { LoadingIndicator } from "@Views/LoadingIndicator/LoadingIndicator";
 import { UserContext } from "@ContextProviders/ApiProviders/UserInfoProvider";
 import { ChatMessagesContext } from "@ContextProviders/ApiProviders/ChatMessagesProvider";
 import { CommandsContext } from "@ContextProviders/ApiProviders/CommandsProvider";

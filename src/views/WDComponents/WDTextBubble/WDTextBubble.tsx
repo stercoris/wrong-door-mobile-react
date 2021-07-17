@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from "react-native";
 
 const s = StyleSheet.create({
 	container: {
-		width: "fit-content",
 		maxWidth: "100%",
 		backgroundColor: "#333336",
 		borderColor: "#00FF37",

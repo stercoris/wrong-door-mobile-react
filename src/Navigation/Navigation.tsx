@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
 import { Controls } from "./ControlsScreen/Controls";
 import { LoadingScreen } from "./LoadingScreen/LoadingScreen";
 import { NavigationContainer } from "@react-navigation/native";
