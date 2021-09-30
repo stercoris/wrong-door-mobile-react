@@ -1,10 +1,11 @@
 query GetUsers {
-	Users {
-		id
-		deviceid
-		username
-		access_level
-		last_online_time
-		image
-	}
+  Users {
+    id
+    deviceid
+    access_level
+    deleted
+    last_online_time
+    image
+    username
+  }
 }

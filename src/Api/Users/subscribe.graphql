@@ -1,0 +1,23 @@
+subscription SubscribeToNewUser {
+  newUser {
+    id
+    deviceid
+    username
+    access_level
+    deleted
+    last_online_time
+    image
+  }
+}
+
+subscription SubscribeToDeletedUser {
+  deletedUser {
+    id
+    deviceid
+    username
+    access_level
+    deleted
+    last_online_time
+    image
+  }
+}

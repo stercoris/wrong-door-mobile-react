@@ -1,10 +1,11 @@
 mutation CreateUser($user: UserInput!) {
-	CreateUser(User: $user) {
-		id
-		deviceid
-		username
-		access_level
-		last_online_time
-		image
-	}
+  CreateUser(User: $user) {
+    id
+    deviceid
+    access_level
+    deleted
+    last_online_time
+    image
+    username
+  }
 }

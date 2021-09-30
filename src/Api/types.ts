@@ -91,7 +91,7 @@ export type Mutation = {
   DeleteLog: LogsMessage;
   UpdateUser: User;
   CreateUser: User;
-  DeleteUser: Scalars['Boolean'];
+  DeleteUser: User;
 };
 
 
@@ -172,6 +172,8 @@ export type Subscription = {
   deletedCommand: Command;
   newLogMessage: LogsMessage;
   deletedLogMessage: LogsMessage;
+  newUser: User;
+  deletedUser: User;
 };
 
 export type User = {
@@ -180,6 +182,7 @@ export type User = {
   deviceid: Scalars['String'];
   username: Scalars['String'];
   access_level: AccessLevel;
+  deleted: Scalars['Boolean'];
   last_online_time: Scalars['DateTime'];
   image?: Maybe<Scalars['String']>;
 };
@@ -398,7 +401,7 @@ export type CreateUserMutation = (
   { __typename?: 'Mutation' }
   & { CreateUser: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'deviceid' | 'username' | 'access_level' | 'last_online_time' | 'image'>
+    & Pick<User, 'id' | 'deviceid' | 'access_level' | 'deleted' | 'last_online_time' | 'image' | 'username'>
   ) }
 );
 
@@ -409,8 +412,30 @@ export type GetUsersQuery = (
   { __typename?: 'Query' }
   & { Users: Array<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'deviceid' | 'username' | 'access_level' | 'last_online_time' | 'image'>
+    & Pick<User, 'id' | 'deviceid' | 'access_level' | 'deleted' | 'last_online_time' | 'image' | 'username'>
   )> }
+);
+
+export type SubscribeToNewUserSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeToNewUserSubscription = (
+  { __typename?: 'Subscription' }
+  & { newUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'deviceid' | 'username' | 'access_level' | 'deleted' | 'last_online_time' | 'image'>
+  ) }
+);
+
+export type SubscribeToDeletedUserSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SubscribeToDeletedUserSubscription = (
+  { __typename?: 'Subscription' }
+  & { deletedUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'deviceid' | 'username' | 'access_level' | 'deleted' | 'last_online_time' | 'image'>
+  ) }
 );
 
 
@@ -1000,10 +1025,11 @@ export const CreateUserDocument = gql`
   CreateUser(User: $user) {
     id
     deviceid
-    username
     access_level
+    deleted
     last_online_time
     image
+    username
   }
 }
     `;
@@ -1038,10 +1064,11 @@ export const GetUsersDocument = gql`
   Users {
     id
     deviceid
-    username
     access_level
+    deleted
     last_online_time
     image
+    username
   }
 }
     `;
@@ -1072,3 +1099,73 @@ export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export const SubscribeToNewUserDocument = gql`
+    subscription SubscribeToNewUser {
+  newUser {
+    id
+    deviceid
+    username
+    access_level
+    deleted
+    last_online_time
+    image
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToNewUserSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToNewUserSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToNewUserSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToNewUserSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeToNewUserSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubscribeToNewUserSubscription, SubscribeToNewUserSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToNewUserSubscription, SubscribeToNewUserSubscriptionVariables>(SubscribeToNewUserDocument, options);
+      }
+export type SubscribeToNewUserSubscriptionHookResult = ReturnType<typeof useSubscribeToNewUserSubscription>;
+export type SubscribeToNewUserSubscriptionResult = Apollo.SubscriptionResult<SubscribeToNewUserSubscription>;
+export const SubscribeToDeletedUserDocument = gql`
+    subscription SubscribeToDeletedUser {
+  deletedUser {
+    id
+    deviceid
+    username
+    access_level
+    deleted
+    last_online_time
+    image
+  }
+}
+    `;
+
+/**
+ * __useSubscribeToDeletedUserSubscription__
+ *
+ * To run a query within a React component, call `useSubscribeToDeletedUserSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeToDeletedUserSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubscribeToDeletedUserSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSubscribeToDeletedUserSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubscribeToDeletedUserSubscription, SubscribeToDeletedUserSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubscribeToDeletedUserSubscription, SubscribeToDeletedUserSubscriptionVariables>(SubscribeToDeletedUserDocument, options);
+      }
+export type SubscribeToDeletedUserSubscriptionHookResult = ReturnType<typeof useSubscribeToDeletedUserSubscription>;
+export type SubscribeToDeletedUserSubscriptionResult = Apollo.SubscriptionResult<SubscribeToDeletedUserSubscription>;
