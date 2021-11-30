@@ -23,6 +23,7 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
   const { users, isLoaded: isAllUsersLoaded } = useContext(UsersContext);
   const [user, setUser] = useState<UserInfo>(null);
   const [isLoaded, setLoaded] = useState<boolean>(false);
+  const [CLICreated, setCLICreated] = useState<boolean>(false);
   const [deviceId, setDeviceId] = useState<string>();
   const [createUser] = useCreateUserMutation();
 
@@ -49,6 +50,10 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
     if (thisUser) {
       setUser(thisUser);
       setLoaded(true);
+      if (!CLICreated) {
+        createCLI();
+        setCLICreated(true);
+      }
       return;
     }
 
@@ -59,9 +64,11 @@ export const UserInfoProvider: React.FC<UserContextProps> = ({ children }) => {
       const newUser = userRequest.data?.CreateUser!;
       setUser(newUser);
       setLoaded(true);
+      if (!CLICreated) {
+        createCLI();
+        setCLICreated(true);
+      }
     })();
-
-    createCLI();
   }, [isAllUsersLoaded, deviceId]);
 
   return (

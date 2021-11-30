@@ -5,7 +5,7 @@ import {
   useSubscribeToNewUserSubscription,
 } from "@Api";
 import React from "react";
-import ConnectEntityToGraphql from "./common/baseReactiveContext";
+import сonnectEntityToGraphql from "./common/baseReactiveContext";
 
 interface UsersContextType {
   users: User[];
@@ -28,7 +28,7 @@ export const UsersProvider: React.FC<UsersProviderProps> = ({ children }) => {
   const { data: subscribeNew } = useSubscribeToNewUserSubscription();
   const { data: subscribeDelete } = useSubscribeToDeletedUserSubscription();
 
-  const { entities: users, isLoaded } = ConnectEntityToGraphql({
+  const { entities: users, isLoaded } = сonnectEntityToGraphql({
     allEntities: all?.Users,
     deletedIncomingEntity: subscribeNew?.newUser,
     newIncomingEntity: subscribeDelete?.deletedUser,

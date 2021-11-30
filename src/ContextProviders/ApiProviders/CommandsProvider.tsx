@@ -7,8 +7,8 @@ import {
   useSubscribeToDeletedCommandSubscription,
   useSubscribeToNewCommandsSubscription,
 } from "@Api";
-import React, { useEffect, useState } from "react";
-import ConnectEntityToGraphql from "./common/baseReactiveContext";
+import React from "react";
+import сonnectEntityToGraphql from "./common/baseReactiveContext";
 
 interface CommandsContextType {
   commands: Command[];
@@ -37,7 +37,7 @@ export const CommandsProvider: React.FC<CommandsProviderProps> = ({
   const { data: subscribeNew } = useSubscribeToDeletedCommandSubscription();
   const { data: subscribeDelete } = useSubscribeToNewCommandsSubscription();
 
-  const { entities: commands, isLoaded } = ConnectEntityToGraphql({
+  const { entities: commands, isLoaded } = сonnectEntityToGraphql({
     allEntities: all?.Commands,
     deletedIncomingEntity: subscribeNew?.deletedCommand,
     newIncomingEntity: subscribeDelete?.newCommand,
